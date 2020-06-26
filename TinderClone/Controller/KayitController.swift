@@ -7,18 +7,23 @@
 //
 
 import UIKit
+import Firebase
+import JGProgressHUD
 
 class KayitController: UIViewController {
-//MARK: Objeler
+    //MARK: Objeler
     let btnFotorafsec : UIButton = {
         let btn = UIButton(type: .system)
         btn.setTitle("FotoSeç", for: .normal)
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 32, weight: .heavy)
         btn.setTitleColor(.black, for: .normal)
         btn.backgroundColor = .white
-        
         btn.layer.cornerRadius = 15
         btn.heightAnchor.constraint(equalToConstant: 280).isActive = true
+        
+        btn.addTarget(self, action: #selector(btnFotorafSecPressed), for: .touchUpInside)
+        btn.imageView?.contentMode = .scaleAspectFill
+        btn.clipsToBounds = true
         return btn
     }()
     let txtEmailAdrsi : UITextField = {
@@ -56,20 +61,21 @@ class KayitController: UIViewController {
         btn.backgroundColor = .lightGray
         btn.setTitleColor(.darkGray, for: .disabled)
         btn.isEnabled = false
+        btn.addTarget(self, action: #selector(btnKayitOlPressed), for: .touchUpInside)
         return btn
     }()
     //MARK: Değişkenler
     lazy var kayitStackView = UIStackView(arrangedSubviews: [
-    btnFotorafsec,
-    dikeySV
+        btnFotorafsec,
+        dikeySV
     ])
     //Telefonun dikey stack view da olacak fonksyionlar
     lazy var dikeySV : UIStackView = {
         let sv = UIStackView(arrangedSubviews: [
-        txtEmailAdrsi,
-        txtAdiSyoadi,
-        txtParola,
-        btnKayitol
+            txtEmailAdrsi,
+            txtAdiSyoadi,
+            txtParola,
+            btnKayitol
         ])
         sv.axis = .vertical
         sv.distribution = .fillEqually
@@ -106,19 +112,31 @@ class KayitController: UIViewController {
     let kayitViewModel = KayitViewModel()
     fileprivate func olusturKayitViewModelObsorver(){
         //kayıtlı olan modelin observırna değer koyduk
-        kayitViewModel.kayitVerileriGeceliObsorver = { (gecerli) in
-            print("kayıt formu dolduruluyor ... ", gecerli ? "FormGecerli " : "Form Gecersiz ")
+        kayitViewModel.bindableKayitVerileriGecerli.degerAta { (gecerli) in
+            guard let gecerli = gecerli else {return}
             if gecerli{
                 //fieldlar eğer dolu ise
                 self.btnKayitol.backgroundColor = #colorLiteral(red: 0.1019607857, green: 0.2784313858, blue: 0.400000006, alpha: 1)
                 self.btnKayitol.setTitleColor(.white, for: .normal)
                 self.btnKayitol.isEnabled = true
-                  }else{
+            }else{
                 //Boş ise
                 self.btnKayitol.backgroundColor = .lightGray
                 self.btnKayitol.setTitleColor(.darkGray, for: .disabled)
                 self.btnKayitol.isEnabled = false
-                  }
+            }
+        }
+        kayitViewModel.bindableimg.degerAta { (imgProfil) in
+            self.btnFotorafsec.setImage(imgProfil?.withRenderingMode(.alwaysOriginal), for: .normal)
+        }
+        kayitViewModel.bindableKayitOluyor.degerAta { (kayıtoluyor) in
+            
+            if kayıtoluyor == true{
+                self.kayitHud.textLabel.text = "Hesap Oluşturuluyor"
+                self.kayitHud.show(in : self.view)
+            }else {
+                self.kayitHud.dismiss()
+            }
         }
     }
     @objc fileprivate func yakalaTextFieldDeğişim(textfield: UITextField){
@@ -151,7 +169,7 @@ class KayitController: UIViewController {
     @objc fileprivate func klavyeGizlenmesiniYakala(){
         //Klavye gizlenirken ne olacağını hesaplıyor
         UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-        self.view.transform = .identity
+            self.view.transform = .identity
         }, completion: nil)
     }
     @objc fileprivate func klavyeGosterimiYakala(notifaction : Notification){
@@ -164,6 +182,9 @@ class KayitController: UIViewController {
         let altBoslukMiktarı = view.frame.height - (kayitStackView.frame.origin.y + kayitStackView.frame.height)
         //klavyenin yüksekliği ile boşluk mitarı arasındaki fark
         let hatapayı = klavyebitisFrame.height - altBoslukMiktarı
+        if hatapayı < 0 {
+            return
+        }
         self.view.transform = CGAffineTransform(translationX: 0, y: -hatapayı - 10 )
     }
     //Objelerin viewdaki yerini düzenliyor
@@ -193,4 +214,41 @@ class KayitController: UIViewController {
         gradient.locations = [0.1]
         view.layer.addSublayer(gradient)
     }
+    fileprivate func hatabilgilendirmeHUD(hata : Error){
+        //Ufak bir bilgilendirme kutucuğu oluşturuyor
+        let hud = JGProgressHUD(style: .dark)
+        hud.textLabel.text = "Kayıt işlemi başarısız"
+        hud.detailTextLabel.text = hata.localizedDescription
+        hud.show(in: self.view)
+        hud.dismiss(afterDelay: 2, animated: true)
+        
+    }
+    @objc fileprivate func btnFotorafSecPressed(){
+        let imgPickerController = UIImagePickerController()
+        imgPickerController.delegate = self
+        present(imgPickerController, animated: true, completion: nil)
+    }
+    //MARK: FireBase
+    let kayitHud = JGProgressHUD(style: .dark)
+    @objc fileprivate func btnKayitOlPressed(){
+        self.klavyeKapat()
+        //Kayıt view model içerisen yazıyoruz 
+        kayitViewModel.kullaniciKayitGerceklesti { (hata) in
+            if let hata = hata{
+                self.hatabilgilendirmeHUD(hata: hata)
+                return
+            }
+        }
+    }
 }
+extension KayitController : UIImagePickerControllerDelegate,UINavigationControllerDelegate{
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        let imgSecilen = info[.originalImage] as? UIImage
+        kayitViewModel.bindableimg.deger = imgSecilen
+        dismiss(animated: true, completion: nil)
+    }
+}
+
