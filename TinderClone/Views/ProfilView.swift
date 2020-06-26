@@ -60,7 +60,7 @@ class ProfilView: UIView {
         olusturGradientLayer()
         
         addSubview(lblKullanicibilgileri)
-        lblKullanicibilgileri.anchor(top: nil, bottom: bottomAnchor, leading: leadingAnchor, traling: trailingAnchor, padding: .init(top: 0, left: 15, bottom: 15, right: 15))
+        _ = lblKullanicibilgileri.anchor(top: nil, bottom: bottomAnchor, leading: leadingAnchor, traling: trailingAnchor, padding: .init(top: 0, left: 15, bottom: 15, right: 15))
         lblKullanicibilgileri.textColor = .white
         lblKullanicibilgileri.numberOfLines = 0
         
@@ -85,7 +85,7 @@ class ProfilView: UIView {
     fileprivate let goruntuBarStackView = UIStackView()
     fileprivate func olsusturBarstackView(){
         addSubview(goruntuBarStackView)
-        goruntuBarStackView.anchor(top: topAnchor, bottom: nil, leading: leadingAnchor, traling: trailingAnchor,padding:.init(top: 8, left: 8, bottom: 0, right: 8),boyut: .init(width: 0, height: 4))
+        _ = goruntuBarStackView.anchor(top: topAnchor, bottom: nil, leading: leadingAnchor, traling: trailingAnchor,padding:.init(top: 8, left: 8, bottom: 0, right: 8),boyut: .init(width: 0, height: 4))
         //Elemanlar arasında 4 boşluk bırakıyor
         goruntuBarStackView.spacing = 4
         goruntuBarStackView.distribution = .fillEqually
