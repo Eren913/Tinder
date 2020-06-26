@@ -26,6 +26,7 @@ class KayitController: UIViewController {
         txt.backgroundColor = .white
         txt.placeholder = "Email Adress"
         txt.keyboardType = .emailAddress
+        txt.addTarget(self, action: #selector(yakalaTextFieldDeğişim), for: .editingChanged)
         return txt
     }()
     
@@ -33,6 +34,7 @@ class KayitController: UIViewController {
         let txt = OzelTextField(padding : 15)
         txt.backgroundColor = .white
         txt.placeholder = "Ad ve Soyad"
+        txt.addTarget(self, action: #selector(yakalaTextFieldDeğişim), for: .editingChanged)
         return txt
     }()
     let txtParola : UITextField = {
@@ -40,6 +42,7 @@ class KayitController: UIViewController {
         txt.backgroundColor = .white
         txt.placeholder = "Parola"
         txt.isSecureTextEntry = true
+        txt.addTarget(self, action: #selector(yakalaTextFieldDeğişim), for: .editingChanged)
         return txt
     }()
     let btnKayitol : UIButton = {
@@ -49,17 +52,30 @@ class KayitController: UIViewController {
         btn.setTitle("Kayıt ol", for: .normal)
         btn.setTitleColor(.white, for: .normal)
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .heavy)
-        btn.backgroundColor = #colorLiteral(red: 0.1019607857, green: 0.2784313858, blue: 0.400000006, alpha: 1)
+        //btn.backgroundColor = #colorLiteral(red: 0.1019607857, green: 0.2784313858, blue: 0.400000006, alpha: 1)
+        btn.backgroundColor = .lightGray
+        btn.setTitleColor(.darkGray, for: .disabled)
+        btn.isEnabled = false
         return btn
     }()
     //MARK: Değişkenler
     lazy var kayitStackView = UIStackView(arrangedSubviews: [
     btnFotorafsec,
-    txtEmailAdrsi,
-    txtAdiSyoadi,
-    txtParola,
-    btnKayitol
+    dikeySV
     ])
+    //Telefonun dikey stack view da olacak fonksyionlar
+    lazy var dikeySV : UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [
+        txtEmailAdrsi,
+        txtAdiSyoadi,
+        txtParola,
+        btnKayitol
+        ])
+        sv.axis = .vertical
+        sv.distribution = .fillEqually
+        sv.spacing = 10
+        return sv
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = true
@@ -67,6 +83,9 @@ class KayitController: UIViewController {
         layoutDuzenle()
         olusturNotificationObserver()
         ekleTapGesture()
+        
+        olusturKayitViewModelObsorver()
+        
     }
     override func viewDidDisappear(_ animated: Bool) {
         //Sayfa kaybolurken Notification verilerini siliyor
@@ -74,6 +93,45 @@ class KayitController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
     //MARK: Fonksiyonlar
+    
+    //Telefon eklanı yön değiştirdiği  zaman tetiklenecek fonksiyon
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        if self.traitCollection.verticalSizeClass == .compact{
+            kayitStackView.axis = .horizontal
+        }else{
+            kayitStackView.axis = .vertical
+        }
+    }
+    //Bir nesne türettik KayitViewModel dan
+    let kayitViewModel = KayitViewModel()
+    fileprivate func olusturKayitViewModelObsorver(){
+        //kayıtlı olan modelin observırna değer koyduk
+        kayitViewModel.kayitVerileriGeceliObsorver = { (gecerli) in
+            print("kayıt formu dolduruluyor ... ", gecerli ? "FormGecerli " : "Form Gecersiz ")
+            if gecerli{
+                //fieldlar eğer dolu ise
+                self.btnKayitol.backgroundColor = #colorLiteral(red: 0.1019607857, green: 0.2784313858, blue: 0.400000006, alpha: 1)
+                self.btnKayitol.setTitleColor(.white, for: .normal)
+                self.btnKayitol.isEnabled = true
+                  }else{
+                //Boş ise
+                self.btnKayitol.backgroundColor = .lightGray
+                self.btnKayitol.setTitleColor(.darkGray, for: .disabled)
+                self.btnKayitol.isEnabled = false
+                  }
+        }
+    }
+    @objc fileprivate func yakalaTextFieldDeğişim(textfield: UITextField){
+        //kayitViewModel nesneine değer atıyoruz
+        if textfield == txtEmailAdrsi{
+            kayitViewModel.emailAdresii = textfield.text
+        }else if textfield == txtAdiSyoadi{
+            kayitViewModel.adiSoyadi = textfield.text
+        }else if textfield == txtParola{
+            kayitViewModel.parola = textfield.text
+        }
+        
+    }
     fileprivate func ekleTapGesture(){
         //Vievın tamamına gestıre ekliyoruz
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(klavyeKapat)))
@@ -113,19 +171,26 @@ class KayitController: UIViewController {
         self.navigationController?.navigationBar.isHidden = true
         view.addSubview(kayitStackView)
         kayitStackView.axis = .vertical
+        //Yatay düzeye geçtiği zaman fotoraf seç butonunun değerlerini giriyoruz-----
+        btnFotorafsec.widthAnchor.constraint(equalToConstant: 260).isActive = true
+        //---------
         kayitStackView.spacing = 10
         _ = kayitStackView.anchor(top: nil, bottom: nil, leading: view.leadingAnchor, traling: view.trailingAnchor,padding: .init(top: 0, left: 45, bottom: 0, right: 45))
         kayitStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
+    //Ekran döndürmesi her gerçekleştiği sırada  bu meteod çaışıyor
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        gradient.frame = view.bounds
+    }
+    let gradient = CAGradientLayer()
     //Ekranın arka plandaki greadient rengini ayarlıyor
     private func arkaplanGradientAyarla(){
-        let gradient = CAGradientLayer()
+        
         let ustRenk = #colorLiteral(red: 0.6392156863, green: 0.8, blue: 0.9568627451, alpha: 1)
         let altRenk = #colorLiteral(red: 0.1215686275, green: 0.1490196078, blue: 0.737254902, alpha: 1)
         gradient.colors = [ustRenk.cgColor , altRenk.cgColor]
         gradient.locations = [0.1]
         view.layer.addSublayer(gradient)
-        gradient.frame = view.bounds
-        
     }
 }

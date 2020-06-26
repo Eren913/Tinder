@@ -15,6 +15,7 @@
 		227B924024A5619D00E6F279 /* ProfilView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227B923F24A5619D00E6F279 /* ProfilView.swift */; };
 		229DAF9224A66E8B00ACC489 /* KayitController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229DAF9124A66E8B00ACC489 /* KayitController.swift */; };
 		229DAF9424A675C800ACC489 /* OzelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229DAF9324A675C800ACC489 /* OzelTextField.swift */; };
+		229DAF9624A68D4800ACC489 /* KayitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229DAF9524A68D4800ACC489 /* KayitViewModel.swift */; };
 		22AFAC6D249FD819004C898B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AFAC6C249FD819004C898B /* AppDelegate.swift */; };
 		22AFAC6F249FD819004C898B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AFAC6E249FD819004C898B /* SceneDelegate.swift */; };
 		22AFAC71249FD819004C898B /* AnaController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AFAC70249FD819004C898B /* AnaController.swift */; };
@@ -33,6 +34,7 @@
 		227B923F24A5619D00E6F279 /* ProfilView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilView.swift; sourceTree = "<group>"; };
 		229DAF9124A66E8B00ACC489 /* KayitController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KayitController.swift; sourceTree = "<group>"; };
 		229DAF9324A675C800ACC489 /* OzelTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OzelTextField.swift; sourceTree = "<group>"; };
+		229DAF9524A68D4800ACC489 /* KayitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KayitViewModel.swift; sourceTree = "<group>"; };
 		22AFAC69249FD819004C898B /* TinderClone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TinderClone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22AFAC6C249FD819004C898B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		22AFAC6E249FD819004C898B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				2241243324A62AA600EDFC63 /* KullanıcıProfilViewModel.swift */,
+				229DAF9524A68D4800ACC489 /* KayitViewModel.swift */,
 			);
 			path = "View Model";
 			sourceTree = "<group>";
@@ -221,6 +224,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				229DAF9624A68D4800ACC489 /* KayitViewModel.swift in Sources */,
 				229DAF9224A66E8B00ACC489 /* KayitController.swift in Sources */,
 				22AFAC71249FD819004C898B /* AnaController.swift in Sources */,
 				2241243424A62AA600EDFC63 /* KullanıcıProfilViewModel.swift in Sources */,
