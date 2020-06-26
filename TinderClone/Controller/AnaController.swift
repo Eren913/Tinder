@@ -30,10 +30,16 @@ class AnaController: UIViewController {
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-   
+        
+        topStackView.btnAyarlar.addTarget(self, action: #selector(btnAyarlarPressed), for: .touchUpInside)
         layoutDuzuenle()
         gorunumuAyarla()
         
+    }
+    @objc func btnAyarlarPressed(){
+    
+        let kayıtControoler = KayitController()
+        present(kayıtControoler, animated: true, completion: nil)
     }
     //MARK: Layout düzenyeen fonksiyon
     func layoutDuzuenle(){
