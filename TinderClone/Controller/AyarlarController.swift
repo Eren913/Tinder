@@ -95,13 +95,13 @@ class AyarlarController: UITableViewController ,UIImagePickerControllerDelegate,
             SDWebImageManager.shared.loadImage(with: url, options: .continueInBackground, progress: nil) { (goruntu, _, _, _, _, _) in
                 self.btnGoruntuSec1.setImage(goruntu?.withRenderingMode(.alwaysOriginal), for: .normal)
             }
-        }else if let goruntuURL = gecerliKullanici?.goruntuURL2,let url = URL(string: goruntuURL) {
-            
+        }
+        if let goruntuURL = gecerliKullanici?.goruntuURL2,let url = URL(string: goruntuURL) {
             SDWebImageManager.shared.loadImage(with: url, options: .continueInBackground, progress: nil) { (goruntu, _, _, _, _, _) in
                 self.btnGoruntuSec2.setImage(goruntu?.withRenderingMode(.alwaysOriginal), for: .normal)
             }
-        }else if let goruntuURL = gecerliKullanici?.goruntuURL3,let url = URL(string: goruntuURL) {
-            
+        }
+        if let goruntuURL = gecerliKullanici?.goruntuURL3,let url = URL(string: goruntuURL) {
             SDWebImageManager.shared.loadImage(with: url, options: .continueInBackground, progress: nil) { (goruntu, _, _, _, _, _) in
                 self.btnGoruntuSec3.setImage(goruntu?.withRenderingMode(.alwaysOriginal), for: .normal)
             }
@@ -148,9 +148,12 @@ class AyarlarController: UITableViewController ,UIImagePickerControllerDelegate,
             lblBaslık.text = "Meslek"
         case 4 :
             lblBaslık.text = "Hakkında"
+        case 5:
+            lblBaslık.text = "Yaş Aralığı"
         default:
             lblBaslık.text = "*****Hata****** "
         }
+        lblBaslık.font = UIFont.boldSystemFont(ofSize: 14)
         
         return lblBaslık
         
@@ -162,12 +165,24 @@ class AyarlarController: UITableViewController ,UIImagePickerControllerDelegate,
         return 40
     }
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 5
+        return 6
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return section == 0 ? 0 : 1
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        if indexPath.section == 5 {
+            let yasAralikCell = YasAralikCell(style: .default, reuseIdentifier: nil)
+            yasAralikCell.minSlider.addTarget(self, action: #selector(minYasSliderChancged), for: .valueChanged)
+            yasAralikCell.maxSlider.addTarget(self, action: #selector(maxYasSliderChancged(slider:)), for: .valueChanged)
+            yasAralikCell.lblMin.text = "Min \(gecerliKullanici?.ArananMinYas ?? 18)"
+            yasAralikCell.lblMax.text = "Max \(gecerliKullanici?.ArananMaxYas ?? 90)"
+            yasAralikCell.minSlider.value = Float(gecerliKullanici?.ArananMinYas ?? 18)
+            yasAralikCell.maxSlider.value = Float(gecerliKullanici?.ArananMaxYas ?? 90)
+            return yasAralikCell
+        }
+        
         let cell = AyarlarCell(style: .default, reuseIdentifier: nil)
         switch indexPath.section {
         case 1:
@@ -201,7 +216,28 @@ class AyarlarController: UITableViewController ,UIImagePickerControllerDelegate,
     @objc fileprivate func meslekDegisiklikyakala(textField: UITextField){
         self.gecerliKullanici?.meslek = textField.text
     }
-    
+    @objc fileprivate func minYasSliderChancged(slider: UISlider){
+        minMaxAyarla()
+    }
+    @objc fileprivate func maxYasSliderChancged(slider: UISlider){
+        minMaxAyarla()
+    }
+    fileprivate func minMaxAyarla(){
+        //5. section 0.row
+        guard let yasAralıkCell = tableView.cellForRow(at: [5,0]) as? YasAralikCell else{return}
+        let minDeger = Int(yasAralıkCell.minSlider.value)
+        var maxDeger = Int(yasAralıkCell.maxSlider.value)
+        
+        maxDeger = max(minDeger,maxDeger)
+        yasAralıkCell.maxSlider.value = Float(maxDeger)
+        
+        yasAralıkCell.lblMin.text = "Min \(minDeger)"
+        yasAralıkCell.lblMax.text = "Max \(maxDeger)"
+        
+        gecerliKullanici?.ArananMinYas = minDeger
+        gecerliKullanici?.ArananMaxYas = maxDeger
+        
+    }
     fileprivate func navigationOlustur() {
         navigationItem.title = "Ayarlar"
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -221,7 +257,9 @@ class AyarlarController: UITableViewController ,UIImagePickerControllerDelegate,
             "Goruntu_URL2" : gecerliKullanici?.goruntuURL2 ?? "",
             "Goruntu_URL3" : gecerliKullanici?.goruntuURL3 ?? "",
             "Meslek" : gecerliKullanici?.meslek ?? "",
-            "Yasi" : gecerliKullanici?.yasi ?? -1
+            "Yasi" : gecerliKullanici?.yasi ?? -1,
+            "ArananMinYas" : gecerliKullanici?.ArananMinYas ?? -1,
+            "ArananMaxYas" : gecerliKullanici?.ArananMaxYas ?? -1
         ]
         let hud = JGProgressHUD(style: .light)
         hud.textLabel.text = "Bilgilereniz Kaydediliyor"
