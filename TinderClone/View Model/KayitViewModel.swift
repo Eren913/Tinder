@@ -62,7 +62,7 @@ class KayitViewModel{
                 completion(hata)
                 return
             }
-            print("Goruntu Basarı ile upload edildi")
+            print("...Goruntu Basarı ile upload edildi")
             ref.downloadURL { (url, error) in
                 if let hata = error{
                     completion(hata)

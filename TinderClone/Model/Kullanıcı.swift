@@ -13,15 +13,20 @@ struct Kullanici  : ProfilViewModelOlustur {
     var kullaniciAdi : String?
     var meslek : String?
     var yasi : Int?
-    var goruntuURL1 : String
     var kullaniciID : String
+    var goruntuURL1 : String?
+    var goruntuURL2 : String?
+    var goruntuURL3 : String?
+    
     
     //İnit olusuturup kullanıcı 
     init(bilgiler : [String : Any]){
         self.kullaniciAdi = bilgiler["Adi_Soyadi"] as? String ?? ""
         self.yasi = bilgiler["Yasi"] as? Int
         self.meslek = bilgiler["Meslek"] as? String
-        self.goruntuURL1 = bilgiler["Goruntu_URL"] as? String ?? ""
+        self.goruntuURL1 = bilgiler["Goruntu_URL"] as? String
+        self.goruntuURL2 = bilgiler["Goruntu_URL2"] as? String
+        self.goruntuURL3 = bilgiler["Goruntu_URL3"] as? String
         self.kullaniciID = bilgiler["KullaniciID"] as? String ?? ""
         
     }
@@ -32,6 +37,11 @@ struct Kullanici  : ProfilViewModelOlustur {
             attrText.append(NSAttributedString(string: " \(yasStr)", attributes: [.font : UIFont.systemFont(ofSize: 23, weight: .regular)]))
         let meslekStr = meslek != nil ? "\(meslek!)" : "***"
             attrText.append(NSAttributedString(string: "\n\(meslekStr)", attributes: [.font : UIFont.systemFont(ofSize: 20, weight: .regular)]))
-        return KullaniciProfilViewModel(attrString: attrText, goruntuAdlari: [goruntuURL1], bilgiKonumu: .left)
+        
+        var goruntulerUrl = [String]()
+        if let url = goruntuURL1 , !url.isEmpty{goruntulerUrl.append(url)}
+        if let url = goruntuURL2 , !url.isEmpty{goruntulerUrl.append(url)}
+        if let url = goruntuURL3 , !url.isEmpty{goruntulerUrl.append(url)}
+        return KullaniciProfilViewModel(attrString: attrText, goruntuAdlari: goruntulerUrl, bilgiKonumu: .left)
     }
 }

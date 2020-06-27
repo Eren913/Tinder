@@ -19,14 +19,24 @@ class AnaController: UIViewController {
     //Profil View Modela göre bir veri yapısı oluşturuyoruz
     var kullanicilarProfilViewModel = [KullaniciProfilViewModel]()
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.navigationController?.navigationBar.isHidden = true
         topStackView.btnAyarlar.addTarget(self, action: #selector(btnAyarlarPressed), for: .touchUpInside)
         AltButonlarStackView.btnYenile.addTarget(self, action: #selector(btnYenilePressed), for: .touchUpInside)
         layoutDuzuenle()
         kullaniciProfilleriAyarlaFirestore()
         kulanniciVerileriGetirFS()
+        
+       denemeLogin()
+        
+        
+    }
+    fileprivate func denemeLogin(){
+        Auth.auth().signIn(withEmail: "q@q.com", password: "123456", completion: nil)
+        print("Oturum açıldı")
     }
     @objc func btnYenilePressed(){
         kulanniciVerileriGetirFS()
@@ -38,14 +48,15 @@ class AnaController: UIViewController {
         present(navController, animated: true, completion: nil)
     }
     var sonGetirilenKullanici : Kullanici?
+    
     fileprivate func kulanniciVerileriGetirFS(){
-        
         let hud = JGProgressHUD(style: .dark)
         hud.textLabel.text = "Profiller Getiriliyor"
         hud.show(in: view)
+        
         let sorgu = Firestore.firestore().collection("Kullanicilar")
             .order(by: "KullaniciID")
-            //.start(after: [sonGetirilenKullanici?.kullaniciID ?? ""])
+            .start(after: [sonGetirilenKullanici?.kullaniciID ?? ""])
             .limit(to: 2)
         sorgu.getDocuments { (snapshot, error) in
             hud.dismiss()
@@ -62,7 +73,6 @@ class AnaController: UIViewController {
                     self.kullanicidanProfilOlustur(kullanici: kulanici)
                 })
                 //Çektiğimiz verileri func sayesinde yanstıyoruyz
-                //self.kullaniciProfilleriAyarlaFirestore()
             }
         }
     }

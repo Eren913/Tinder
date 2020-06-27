@@ -15,7 +15,6 @@ class ProfilView: UIView {
             let goruntuAdi = kullaniciViewModel.goruntuAdlari.first ?? ""
             if let url = URL(string: goruntuAdi){
                 imgProfil.sd_setImage(with: url)
-                print(".......\(url)")
             }
             lblKullanicibilgileri.attributedText = kullaniciViewModel.attrString
             lblKullanicibilgileri.textAlignment = kullaniciViewModel.bilgiKonumu
