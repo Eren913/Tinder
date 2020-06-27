@@ -8,11 +8,12 @@
 
 import UIKit
 import Firebase
+import JGProgressHUD
 class AnaController: UIViewController {
-
+    
     let profilDizini = UIView()
     let topStackView = AnaGorunumUstStackView()
-    let butonlar = AnaGorunumAltStackView()
+    let AltButonlarStackView = AnaGorunumAltStackView()
     
     
     //Profil View Modela göre bir veri yapısı oluşturuyoruz
@@ -22,18 +23,34 @@ class AnaController: UIViewController {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = true
         topStackView.btnAyarlar.addTarget(self, action: #selector(btnAyarlarPressed), for: .touchUpInside)
+        AltButonlarStackView.btnYenile.addTarget(self, action: #selector(btnYenilePressed), for: .touchUpInside)
         layoutDuzuenle()
-        gorunumuAyarla()
-        KulanniciVerileriGetirFS()
+        kullaniciProfilleriAyarlaFirestore()
+        kulanniciVerileriGetirFS()
+    }
+    @objc func btnYenilePressed(){
+        kulanniciVerileriGetirFS()
     }
     @objc func btnAyarlarPressed(){
-    
+        
         let kayıtControoler = KayitController()
         present(kayıtControoler, animated: true, completion: nil)
     }
-    
-    fileprivate func KulanniciVerileriGetirFS(){
-        Firestore.firestore().collection("Kullanicilar").getDocuments { (snapshot, error) in
+    var sonGetirilenKullanici : Kullanici?
+    fileprivate func kulanniciVerileriGetirFS(){
+        
+        let hud = JGProgressHUD(style: .dark)
+        hud.textLabel.text = "Profiller Getiriliyor"
+        hud.show(in: view)
+        let sorgu = Firestore.firestore().collection("Kullanicilar")
+            .order(by: "KullaniciID")
+            .start(after: [sonGetirilenKullanici?.kullaniciID ?? ""])
+            .limit(to: 2)
+        
+        
+        
+        sorgu.getDocuments { (snapshot, error) in
+            hud.dismiss()
             if let hata = error{
                 print("Kullanıcılar getirilirken hata oluştu \(hata.localizedDescription)")
                 return
@@ -43,16 +60,24 @@ class AnaController: UIViewController {
                     //Çektiğimiz verileri Kullanıcı initi içerisindeki verilere atıyoruz
                     let kulanici = Kullanici(bilgiler: kullaniciVeri)
                     self.kullanicilarProfilViewModel.append(kulanici.kullaniciProfilViewModelOlustur())
+                    self.sonGetirilenKullanici = kulanici
+                    self.kullanicidanProfilOlustur(kullanici: kulanici)
                 })
                 //Çektiğimiz verileri func sayesinde yanstıyoruyz
-                self.gorunumuAyarla()
+                //self.kullaniciProfilleriAyarlaFirestore()
             }
         }
+    }
+    fileprivate func kullanicidanProfilOlustur(kullanici: Kullanici){
+        let pView = ProfilView(frame: .zero)
+        pView.kullaniciViewModel = kullanici.kullaniciProfilViewModelOlustur()
+        profilDizini.addSubview(pView)
+        pView.doldurSuperView()
     }
     //MARK: Layout düzenyeen fonksiyon
     func layoutDuzuenle(){
         view.backgroundColor = .white
-        let genelStackView = UIStackView(arrangedSubviews: [topStackView,profilDizini,butonlar])
+        let genelStackView = UIStackView(arrangedSubviews: [topStackView,profilDizini,AltButonlarStackView])
         genelStackView.axis = .vertical
         view.addSubview(genelStackView)
         genelStackView.doldurSuperView()
@@ -63,7 +88,7 @@ class AnaController: UIViewController {
         genelStackView.bringSubviewToFront(profilDizini)
         
     }
-    func gorunumuAyarla(){
+    func kullaniciProfilleriAyarlaFirestore(){
         //Yuakrda oluşturduğumuz veriyi view da gösteryiyorzu
         kullanicilarProfilViewModel.forEach { (kullaniciM) in
             let profilView = ProfilView(frame: .zero)

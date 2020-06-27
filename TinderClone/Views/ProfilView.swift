@@ -47,7 +47,7 @@ class ProfilView: UIView {
         }
     }
     
-        
+    
     fileprivate let imgProfil = UIImageView()
     fileprivate let gradientLayer = CAGradientLayer()
     fileprivate let lblKullanicibilgileri = UILabel()
@@ -57,14 +57,15 @@ class ProfilView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         duzenleLayout()
-       
+        
         //Tutup sürüklemek için kullanılan gesture Recognizer
         let panG = UIPanGestureRecognizer(target: self, action: #selector(profilPanYakala))
         addGestureRecognizer(panG)
         let tapG = UITapGestureRecognizer(target: self, action: #selector(yakalaTapGestureRecognizer))
         addGestureRecognizer(tapG)
     }
-    fileprivate func duzenleLayout(){        layer.cornerRadius = 15
+    fileprivate func duzenleLayout(){
+        layer.cornerRadius = 15
         clipsToBounds = true
         imgProfil.contentMode = .scaleAspectFill
         addSubview(imgProfil)
@@ -112,7 +113,7 @@ class ProfilView: UIView {
         //gradient değelerini bütün katmana yayıyor ve ekstradan bu fonksiyon bütün layer değerlerini veriyor
         gradientLayer.frame = self.frame
     }
-
+    
     @objc func profilPanYakala(panGesture : UIPanGestureRecognizer){
         switch panGesture.state {
         case .began :
@@ -127,8 +128,8 @@ class ProfilView: UIView {
             //çekmeyi bıraktığımızda
             bitisPanAnimasyon(panGesture)
             superview?.subviews.forEach({ (subview) in
-                           subview.layer.removeAllAnimations()
-                       })
+                subview.layer.removeAllAnimations()
+            })
         default:
             break
         }
@@ -143,14 +144,14 @@ class ProfilView: UIView {
         let profilKaybet : Bool = abs(panGesture.translation(in: nil).x) > sinirDegeri
         UIView.animate(withDuration: 0.8, delay: 0, /* Resmin Yaylanma çzelliğini ifade ediyor*/ usingSpringWithDamping: 0.5, /*Animasyonun hızı */initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             //animasyonun amacını yazıyoruz
-                  if profilKaybet {
-                    //burda ise profil remisini x düzlemind e900 birim fırlatıyoruz değer true ise
-                    let ekranDisi = self.transform.translatedBy(x: 900*translationYonu, y: 0)
-                    self.transform = ekranDisi
-                  }else{
-                    //false dönünce değer eski yerine dönmesini sağlıutz
-                     self.transform = .identity
-                  }
+            if profilKaybet {
+                //burda ise profil remisini x düzlemind e900 birim fırlatıyoruz değer true ise
+                let ekranDisi = self.transform.translatedBy(x: 900*translationYonu, y: 0)
+                self.transform = ekranDisi
+            }else{
+                //false dönünce değer eski yerine dönmesini sağlıutz
+                self.transform = .identity
+            }
             
         }) { (_) in
             //Kart Geri gelince yazılan yazı ve geri gelince frame de durcak yerini belirliyoruz
@@ -177,5 +178,4 @@ class ProfilView: UIView {
         self.transform = dondurmeTransform.translatedBy(x: translation.x, y: translation.y)
         
     }
-    
 }
