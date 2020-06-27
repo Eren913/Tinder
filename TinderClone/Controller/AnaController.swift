@@ -33,8 +33,9 @@ class AnaController: UIViewController {
     }
     @objc func btnAyarlarPressed(){
         
-        let kayıtControoler = KayitController()
-        present(kayıtControoler, animated: true, completion: nil)
+        let ayarlarController = AyarlarController()
+        let navController = UINavigationController.init(rootViewController: ayarlarController)
+        present(navController, animated: true, completion: nil)
     }
     var sonGetirilenKullanici : Kullanici?
     fileprivate func kulanniciVerileriGetirFS(){
@@ -44,11 +45,8 @@ class AnaController: UIViewController {
         hud.show(in: view)
         let sorgu = Firestore.firestore().collection("Kullanicilar")
             .order(by: "KullaniciID")
-            .start(after: [sonGetirilenKullanici?.kullaniciID ?? ""])
+            //.start(after: [sonGetirilenKullanici?.kullaniciID ?? ""])
             .limit(to: 2)
-        
-        
-        
         sorgu.getDocuments { (snapshot, error) in
             hud.dismiss()
             if let hata = error{

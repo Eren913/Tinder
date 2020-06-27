@@ -28,7 +28,6 @@ struct Kullanici  : ProfilViewModelOlustur {
     func kullaniciProfilViewModelOlustur() -> KullaniciProfilViewModel {
         //Gelecek datalara göre verinin tipini düzenliyoruz ve view modela göre yapıyoruz bunu
         let attrText = NSMutableAttributedString(string: kullaniciAdi ?? "", attributes: [.font: UIFont.systemFont(ofSize: 30, weight: .heavy)])
-        
         let yasStr = yasi != nil ? " \(yasi!)" : "***"
             attrText.append(NSAttributedString(string: " \(yasStr)", attributes: [.font : UIFont.systemFont(ofSize: 23, weight: .regular)]))
         let meslekStr = meslek != nil ? "\(meslek!)" : "***"
