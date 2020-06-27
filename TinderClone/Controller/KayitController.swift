@@ -64,7 +64,7 @@ class KayitController: UIViewController {
         btn.addTarget(self, action: #selector(btnKayitOlPressed), for: .touchUpInside)
         return btn
     }()
-    //MARK: Değişkenler
+    //MARK:- Değişkenler
     lazy var kayitStackView = UIStackView(arrangedSubviews: [
         btnFotorafsec,
         dikeySV
@@ -85,11 +85,11 @@ class KayitController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = true
+        
         arkaplanGradientAyarla()
         layoutDuzenle()
         olusturNotificationObserver()
         ekleTapGesture()
-        
         olusturKayitViewModelObsorver()
         
     }
@@ -98,7 +98,7 @@ class KayitController: UIViewController {
         super.viewWillAppear(true)
         NotificationCenter.default.removeObserver(self)
     }
-    //MARK: Fonksiyonlar
+    //MARK:- Fonksiyonlar
     
     //Telefon eklanı yön değiştirdiği  zaman tetiklenecek fonksiyon
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -207,7 +207,6 @@ class KayitController: UIViewController {
     let gradient = CAGradientLayer()
     //Ekranın arka plandaki greadient rengini ayarlıyor
     private func arkaplanGradientAyarla(){
-        
         let ustRenk = #colorLiteral(red: 0.6392156863, green: 0.8, blue: 0.9568627451, alpha: 1)
         let altRenk = #colorLiteral(red: 0.1215686275, green: 0.1490196078, blue: 0.737254902, alpha: 1)
         gradient.colors = [ustRenk.cgColor , altRenk.cgColor]
@@ -228,7 +227,7 @@ class KayitController: UIViewController {
         imgPickerController.delegate = self
         present(imgPickerController, animated: true, completion: nil)
     }
-    //MARK: FireBase
+    //MARK: -FireBase
     let kayitHud = JGProgressHUD(style: .dark)
     @objc fileprivate func btnKayitOlPressed(){
         self.klavyeKapat()

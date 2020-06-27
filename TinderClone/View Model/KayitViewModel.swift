@@ -36,9 +36,12 @@ class KayitViewModel{
         let gecerli = emailAdresii?.isEmpty == false && adiSoyadi?.isEmpty == false && parola?.isEmpty == false
         bindableKayitVerileriGecerli.deger = gecerli
     }
+    
+    //MARK: FireStore ----------
     //Kullancıyı kayıt edip verilerini data base üzerine atıyoruz
     func kullaniciKayitGerceklesti(completion : @escaping (Error?) ->()){
         guard let emailAdresi = emailAdresii, let parola = parola else {return}
+        
         bindableKayitOluyor.deger = true
         Auth.auth().createUser(withEmail: emailAdresi, password: parola) { (sonuc, hata) in
             if let hata = hata{

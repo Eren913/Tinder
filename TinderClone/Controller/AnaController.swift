@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import Firebase
 class AnaController: UIViewController {
 
     let profilDizini = UIView()
@@ -16,33 +16,42 @@ class AnaController: UIViewController {
     
     
     //Profil View Modela göre bir veri yapısı oluşturuyoruz
-    var kullanicilarProfilViewModel : [KullaniciProfilViewModel] = {
-       let profiller = [
-           Kullanici(kullaniciAdi: "Sinem", meslek: "Kuafor", yasi: 25, goruntuAdlari: ["kisi1-1","kisi1-2","kisi1-3"]),
-           Kullanici(kullaniciAdi: "murat", meslek: "dj", yasi: 22, goruntuAdlari: ["kisi2"]),
-           Kullanici(kullaniciAdi: "Dialn", meslek: "avukat", yasi: 27, goruntuAdlari: ["kisi3"]),
-           Reklam(baslik: "steve", markaAdi: "Apple", afisGoruntuAdi: "apple")
-        //KUllanıcı profil View model içerisimdeki Protocola çevirdkik
-       ] as [ProfilViewModelOlustur]
-        //Dizide dönen değerler KullaniciProfilViewModel tipine eşitlencek
-       let viewModeller = profiller.map({$0.kullaniciProfilViewModelOlustur()})
-        return viewModeller
-    }()
+    var kullanicilarProfilViewModel = [KullaniciProfilViewModel]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.navigationController?.navigationBar.isHidden = true
         topStackView.btnAyarlar.addTarget(self, action: #selector(btnAyarlarPressed), for: .touchUpInside)
         layoutDuzuenle()
         gorunumuAyarla()
-        
+        KulanniciVerileriGetirFS()
     }
     @objc func btnAyarlarPressed(){
     
         let kayıtControoler = KayitController()
         present(kayıtControoler, animated: true, completion: nil)
     }
+    
+    fileprivate func KulanniciVerileriGetirFS(){
+        Firestore.firestore().collection("Kullanicilar").getDocuments { (snapshot, error) in
+            if let hata = error{
+                print("Kullanıcılar getirilirken hata oluştu \(hata.localizedDescription)")
+                return
+            }else{
+                snapshot?.documents.forEach({ (dSnapshot) in
+                    let kullaniciVeri = dSnapshot.data()
+                    //Çektiğimiz verileri Kullanıcı initi içerisindeki verilere atıyoruz
+                    let kulanici = Kullanici(bilgiler: kullaniciVeri)
+                    self.kullanicilarProfilViewModel.append(kulanici.kullaniciProfilViewModelOlustur())
+                })
+                //Çektiğimiz verileri func sayesinde yanstıyoruyz
+                self.gorunumuAyarla()
+            }
+        }
+    }
     //MARK: Layout düzenyeen fonksiyon
     func layoutDuzuenle(){
+        view.backgroundColor = .white
         let genelStackView = UIStackView(arrangedSubviews: [topStackView,profilDizini,butonlar])
         genelStackView.axis = .vertical
         view.addSubview(genelStackView)

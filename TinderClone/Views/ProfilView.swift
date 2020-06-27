@@ -7,13 +7,16 @@
 //
 
 import UIKit
-
+import SDWebImage
 class ProfilView: UIView {
     //Kullanıcı view modeldaki verileri tek bir veriye eşitliyoruz
     var kullaniciViewModel : KullaniciProfilViewModel! {
         didSet{
             let goruntuAdi = kullaniciViewModel.goruntuAdlari.first ?? ""
-            imgProfil.image = UIImage(named: goruntuAdi)
+            if let url = URL(string: goruntuAdi){
+                imgProfil.sd_setImage(with: url)
+                print(".......\(url)")
+            }
             lblKullanicibilgileri.attributedText = kullaniciViewModel.attrString
             lblKullanicibilgileri.textAlignment = kullaniciViewModel.bilgiKonumu
             
@@ -32,12 +35,15 @@ class ProfilView: UIView {
     
     fileprivate func ayarlaGoruntundexGozlemci(){
         
-        kullaniciViewModel.goruntuIndexGozlemci = { (index,goruntu) in
+        kullaniciViewModel.goruntuIndexGozlemci = { (index,goruntuURL) in
             self.goruntuBarStackView.arrangedSubviews.forEach { (sView) in
                 sView.backgroundColor = self.secilOlmayanRenk
             }
             self.goruntuBarStackView.arrangedSubviews[index].backgroundColor = .white
-            self.imgProfil.image = goruntu
+            
+            if let url = URL(string: goruntuURL ?? ""){
+                self.imgProfil.sd_setImage(with: url)
+            }
         }
     }
     
@@ -50,27 +56,26 @@ class ProfilView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        layer.cornerRadius = 15
-        clipsToBounds = true
-        imgProfil.contentMode = .scaleAspectFill
-        addSubview(imgProfil)
-        imgProfil.doldurSuperView()
-        olsusturBarstackView()
-        olusturGradientLayer()
-        
-        addSubview(lblKullanicibilgileri)
-        _ = lblKullanicibilgileri.anchor(top: nil, bottom: bottomAnchor, leading: leadingAnchor, traling: trailingAnchor, padding: .init(top: 0, left: 15, bottom: 15, right: 15))
-        lblKullanicibilgileri.textColor = .white
-        lblKullanicibilgileri.numberOfLines = 0
-        
+        duzenleLayout()
+       
         //Tutup sürüklemek için kullanılan gesture Recognizer
         let panG = UIPanGestureRecognizer(target: self, action: #selector(profilPanYakala))
         addGestureRecognizer(panG)
         let tapG = UITapGestureRecognizer(target: self, action: #selector(yakalaTapGestureRecognizer))
         addGestureRecognizer(tapG)
     }
-    
+    fileprivate func duzenleLayout(){        layer.cornerRadius = 15
+        clipsToBounds = true
+        imgProfil.contentMode = .scaleAspectFill
+        addSubview(imgProfil)
+        imgProfil.doldurSuperView()
+        olsusturBarstackView()
+        olusturGradientLayer()
+        addSubview(lblKullanicibilgileri)
+        _ = lblKullanicibilgileri.anchor(top: nil, bottom: bottomAnchor, leading: leadingAnchor, traling: trailingAnchor, padding: .init(top: 0, left: 15, bottom: 15, right: 15))
+        lblKullanicibilgileri.textColor = .white
+        lblKullanicibilgileri.numberOfLines = 0
+    }
     @objc fileprivate func yakalaTapGestureRecognizer(tapG : UITapGestureRecognizer){
         //Basılan konumun değerini alıyoruz
         let konum = tapG.location(in: nil)
@@ -121,6 +126,9 @@ class ProfilView: UIView {
         case .ended:
             //çekmeyi bıraktığımızda
             bitisPanAnimasyon(panGesture)
+            superview?.subviews.forEach({ (subview) in
+                           subview.layer.removeAllAnimations()
+                       })
         default:
             break
         }

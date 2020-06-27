@@ -23,14 +23,12 @@ class KullaniciProfilViewModel {
     fileprivate var goruntuIndex = 0{
         didSet{
             //alcağı değerler
-            let goruntuAdi = goruntuAdlari[goruntuIndex]
-            let imgProfil = UIImage(named: goruntuAdi)
-            
+            let goruntuURL = goruntuAdlari[goruntuIndex]
             //komut
-            goruntuIndexGozlemci?(goruntuIndex,imgProfil ?? UIImage())
+            goruntuIndexGozlemci?(goruntuIndex,goruntuURL)
         }
     }
-    var goruntuIndexGozlemci : ((Int ,UIImage) -> ())?
+    var goruntuIndexGozlemci : ((Int ,String?) -> ())?
     
     func sonrakiGoruntuyeGit(){
         //goruntu indexi goruntü adlarından büyükse 0. elemana getir eüer değilse 1 arttırmaya devam et
