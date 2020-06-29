@@ -19,16 +19,33 @@ class FotoGecisController: UIPageViewController {
                 
             })
             setViewControllers([controllers.first!], direction: .forward, animated: true, completion: nil)
+            barViewEkle()
         }
     }
     
+    fileprivate func barViewEkle(){
+        kullaniciViewModel.goruntuAdlari.forEach { (_) in
+            let barView = UIView()
+            barView.backgroundColor = seciliolamyanRenk
+            barView.layer.cornerRadius = 3
+            barStackView.addArrangedSubview(barView)
+        }
+        barStackView.arrangedSubviews.first?.backgroundColor = .white
+        barStackView.spacing = 4
+        barStackView.distribution = .fillEqually
+        view.addSubview(barStackView)
+        _ = barStackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: nil, leading: view.leadingAnchor, traling: view.trailingAnchor,padding: .init(top: 8, left: 8, bottom: 0, right: 8),boyut: .init(width: 0, height: 4))
+    }
+    fileprivate let barStackView = UIStackView(arrangedSubviews: [])
+    fileprivate let seciliolamyanRenk = UIColor(white: 0, alpha: 0.2)
     var controllers = [UIViewController]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         dataSource = self
-
+        delegate = self
+        
     }
 }
 extension FotoGecisController : UIPageViewControllerDataSource{
@@ -49,6 +66,16 @@ extension FotoGecisController : UIPageViewControllerDataSource{
     
     
 }
+extension FotoGecisController : UIPageViewControllerDelegate{
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        let gosterilenFotoController = viewControllers?.first
+        if let index = controllers.firstIndex(where: {$0 == gosterilenFotoController}){
+            barStackView.arrangedSubviews.forEach({$0.backgroundColor = seciliolamyanRenk})
+            barStackView.arrangedSubviews[index].backgroundColor = .white
+        }
+        
+    }
+}
 class Fotocontroller : UIViewController{
     let imageView = UIImageView(image: #imageLiteral(resourceName: "kisi3"))
     
@@ -66,6 +93,8 @@ class Fotocontroller : UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         imageView.contentMode = .scaleAspectFill
+        //Sınırları kırp nalamına geliyor 
+        imageView.clipsToBounds = true
         view.addSubview(imageView)
         imageView.doldurSuperView()
     }

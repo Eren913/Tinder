@@ -171,16 +171,23 @@ class AyarlarController: UITableViewController ,UIImagePickerControllerDelegate,
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return section == 0 ? 0 : 1
     }
+    static let varsayilanArananMinYas = 18
+    static let varsayilanArananMaxYas = 90
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if indexPath.section == 5 {
             let yasAralikCell = YasAralikCell(style: .default, reuseIdentifier: nil)
             yasAralikCell.minSlider.addTarget(self, action: #selector(minYasSliderChancged), for: .valueChanged)
             yasAralikCell.maxSlider.addTarget(self, action: #selector(maxYasSliderChancged(slider:)), for: .valueChanged)
-            yasAralikCell.lblMin.text = "Min \(gecerliKullanici?.ArananMinYas ?? 18)"
-            yasAralikCell.lblMax.text = "Max \(gecerliKullanici?.ArananMaxYas ?? 90)"
-            yasAralikCell.minSlider.value = Float(gecerliKullanici?.ArananMinYas ?? 18)
-            yasAralikCell.maxSlider.value = Float(gecerliKullanici?.ArananMaxYas ?? 90)
+            
+            let arananMinYas = gecerliKullanici?.ArananMinYas ?? AyarlarController.varsayilanArananMinYas
+            let arananMaxYas = gecerliKullanici?.ArananMaxYas ?? AyarlarController.varsayilanArananMaxYas
+            
+            yasAralikCell.lblMin.text = "Min \(arananMinYas)"
+            yasAralikCell.lblMax.text = "Max \(arananMaxYas)"
+            
+            yasAralikCell.minSlider.value = Float(arananMinYas)
+            yasAralikCell.maxSlider.value = Float(arananMaxYas)
             return yasAralikCell
         }
         
@@ -259,8 +266,8 @@ class AyarlarController: UITableViewController ,UIImagePickerControllerDelegate,
             "Goruntu_URL3" : gecerliKullanici?.goruntuURL3 ?? "",
             "Meslek" : gecerliKullanici?.meslek ?? "",
             "Yasi" : gecerliKullanici?.yasi ?? -1,
-            "ArananMinYas" : gecerliKullanici?.ArananMinYas ?? -1,
-            "ArananMaxYas" : gecerliKullanici?.ArananMaxYas ?? -1
+            "ArananMinYas" : gecerliKullanici?.ArananMinYas ?? AyarlarController.varsayilanArananMinYas,
+            "ArananMaxYas" : gecerliKullanici?.ArananMaxYas ?? AyarlarController.varsayilanArananMaxYas
         ]
         let hud = JGProgressHUD(style: .light)
         hud.textLabel.text = "Bilgilereniz Kaydediliyor"

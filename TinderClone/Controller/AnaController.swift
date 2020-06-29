@@ -37,9 +37,11 @@ class AnaController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if Auth.auth().currentUser == nil{
-            let oturumControler = OturumController()
-            oturumControler.delegate = self
-            let nav = UINavigationController(rootViewController: oturumControler)
+            
+            let kayitController = KayitController()
+            kayitController.delegate = self
+            
+            let nav = UINavigationController(rootViewController: kayitController)
             nav.modalPresentationStyle = .fullScreen
             present(nav, animated: true, completion: nil)
         }
@@ -63,6 +65,7 @@ class AnaController: UIViewController {
         print("Oturum açıldı")
     }
     @objc func btnYenilePressed(){
+        profilDizini.subviews.forEach({$0.removeFromSuperview()})
         kulanniciVerileriGetirFS()
     }
     @objc func btnAyarlarPressed(){
@@ -77,11 +80,14 @@ class AnaController: UIViewController {
     
     fileprivate func kulanniciVerileriGetirFS(){
         
-        guard let arananMinYas = gecerliKullanici?.ArananMinYas , let arananMaxYas = gecerliKullanici?.ArananMaxYas else {return}
+      //  guard let arananMinYas = gecerliKullanici?.ArananMinYas , let arananMaxYas = gecerliKullanici?.ArananMaxYas else {return}
         
         let hud = JGProgressHUD(style: .dark)
         hud.textLabel.text = "Profiller Getiriliyor"
         hud.show(in: view)
+        
+        let arananMinYas = gecerliKullanici?.ArananMinYas ?? AyarlarController.varsayilanArananMinYas
+        let arananMaxYas = gecerliKullanici?.ArananMaxYas ?? AyarlarController.varsayilanArananMaxYas
         
         let sorgu = Firestore.firestore().collection("Kullanicilar")
             .whereField("Yasi", isGreaterThan: arananMinYas)

@@ -113,7 +113,6 @@ extension KullaniciDetaylariController : UIScrollViewDelegate{
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         let yfark = scrollView.contentOffset.y
-        print("y Fark : \(yfark)")
         var width = view.frame.width - 2*yfark
         width = max(view.frame.width, width)
         let fotoFrame = fotoGecisController.view!

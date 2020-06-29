@@ -32,8 +32,8 @@ class KayitViewModel{
         }
     }
     
-    fileprivate func veriGecerliKontrol(){
-        let gecerli = emailAdresii?.isEmpty == false && adiSoyadi?.isEmpty == false && parola?.isEmpty == false
+     func veriGecerliKontrol(){
+        let gecerli = emailAdresii?.isEmpty == false && adiSoyadi?.isEmpty == false && parola?.isEmpty == false && bindableimg.deger != nil
         bindableKayitVerileriGecerli.deger = gecerli
     }
     
@@ -77,7 +77,13 @@ class KayitViewModel{
     }
     fileprivate func kullaniciBilgileriniFireStoreKaydet(goruntUrl : String ,completion : @escaping (Error?)->()){
         let kullaniciID = Auth.auth().currentUser?.uid ?? ""
-        let eklenecekVeri = ["Adi_Soyadi" : adiSoyadi ?? "AD YOK","Goruntu_URL": goruntUrl,"KullaniciID" :kullaniciID]
+        let eklenecekVeri = ["Adi_Soyadi" : adiSoyadi ?? "AD YOK",
+                             "Goruntu_URL": goruntUrl,
+                             "KullaniciID" :kullaniciID,
+                             "Yas" : 18,
+                             "ArananMinYas" : AyarlarController.varsayilanArananMinYas,
+                             "ArananMaxYas" : AyarlarController.varsayilanArananMaxYas
+            ] as [String : Any]
         Firestore.firestore().collection("Kullanicilar").document(kullaniciID).setData(eklenecekVeri) { (hata) in
             if let hata = hata{
                 completion(hata)

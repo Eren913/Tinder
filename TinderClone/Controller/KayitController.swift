@@ -11,6 +11,7 @@ import Firebase
 import JGProgressHUD
 
 class KayitController: UIViewController {
+    var delegate : OturumControllerDelegate?
     //MARK: Objeler
     let btnFotorafsec : UIButton = {
         let btn = UIButton(type: .system)
@@ -150,6 +151,7 @@ class KayitController: UIViewController {
     }
     @objc fileprivate func btnOturumAcGitPressed(){
         let oturumControoler = OturumController()
+        oturumControoler.delegate = delegate
         navigationController?.pushViewController(oturumControoler, animated: true)
     }
     @objc fileprivate func yakalaTextFieldDeğişim(textfield: UITextField){
@@ -253,6 +255,7 @@ class KayitController: UIViewController {
                 self.hatabilgilendirmeHUD(hata: hata)
                 return
             }
+            
         }
     }
 }
@@ -261,9 +264,12 @@ extension KayitController : UIImagePickerControllerDelegate,UINavigationControll
         dismiss(animated: true, completion: nil)
     }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
         let imgSecilen = info[.originalImage] as? UIImage
         kayitViewModel.bindableimg.deger = imgSecilen
+        kayitViewModel.veriGecerliKontrol()
         dismiss(animated: true, completion: nil)
+        
     }
 }
 
