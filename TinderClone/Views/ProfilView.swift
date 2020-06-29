@@ -9,6 +9,10 @@
 import UIKit
 import SDWebImage
 class ProfilView: UIView {
+    
+    
+    var delegate : ProfilViewDelegate?
+    
     //Kullanıcı view modeldaki verileri tek bir veriye eşitliyoruz
     var kullaniciViewModel : KullaniciProfilViewModel! {
         didSet{
@@ -63,6 +67,16 @@ class ProfilView: UIView {
         let tapG = UITapGestureRecognizer(target: self, action: #selector(yakalaTapGestureRecognizer))
         addGestureRecognizer(tapG)
     }
+    fileprivate let btnDetayliBilgi : UIButton = {
+        let btn = UIButton(type: .system)
+        btn.setBackgroundImage(#imageLiteral(resourceName: "detay").withRenderingMode(.alwaysOriginal), for: .normal)
+        btn.addTarget(self, action: #selector(btnDetayliBilgiPressed), for: .touchUpInside)
+        return btn
+    }()
+    @objc fileprivate func btnDetayliBilgiPressed(){
+        
+        delegate?.detayliBilgiPressed()
+    }
     fileprivate func duzenleLayout(){
         layer.cornerRadius = 15
         clipsToBounds = true
@@ -75,7 +89,10 @@ class ProfilView: UIView {
         _ = lblKullanicibilgileri.anchor(top: nil, bottom: bottomAnchor, leading: leadingAnchor, traling: trailingAnchor, padding: .init(top: 0, left: 15, bottom: 15, right: 15))
         lblKullanicibilgileri.textColor = .white
         lblKullanicibilgileri.numberOfLines = 0
+        addSubview(btnDetayliBilgi)
+        _ = btnDetayliBilgi.anchor(top: nil, bottom: bottomAnchor, leading: nil , traling: trailingAnchor , padding: .init(top: 0, left: 0, bottom: 17, right: 17 ),boyut: .init(width: 45, height: 45))
     }
+    
     @objc fileprivate func yakalaTapGestureRecognizer(tapG : UITapGestureRecognizer){
         //Basılan konumun değerini alıyoruz
         let konum = tapG.location(in: nil)
@@ -177,4 +194,7 @@ class ProfilView: UIView {
         self.transform = dondurmeTransform.translatedBy(x: translation.x, y: translation.y)
         
     }
+}
+protocol ProfilViewDelegate {
+    func detayliBilgiPressed()
 }

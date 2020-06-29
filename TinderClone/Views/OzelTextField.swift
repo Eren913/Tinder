@@ -11,8 +11,10 @@ import UIKit
 class OzelTextField : UITextField{
     
     let padding : CGFloat
-    init(padding: CGFloat) {
+    let yukseklik : CGFloat
+    init(padding: CGFloat,yukseklik : CGFloat) {
         self.padding = padding
+        self.yukseklik = yukseklik
         super.init(frame: .zero)
         layer.cornerRadius = 25
     }
@@ -33,6 +35,6 @@ class OzelTextField : UITextField{
     
     //Text Fiealda yükseklik değeri atıyoruz
     override var intrinsicContentSize: CGSize{
-        return .init(width: 0, height: 50)
+        return .init(width: 0, height: yukseklik)
     }
 }

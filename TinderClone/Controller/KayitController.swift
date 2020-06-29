@@ -27,7 +27,7 @@ class KayitController: UIViewController {
         return btn
     }()
     let txtEmailAdrsi : UITextField = {
-        let txt = OzelTextField(padding : 15)
+        let txt = OzelTextField(padding : 15,yukseklik: 50)
         txt.backgroundColor = .white
         txt.placeholder = "Email Adress"
         txt.keyboardType = .emailAddress
@@ -36,14 +36,14 @@ class KayitController: UIViewController {
     }()
     
     let txtAdiSyoadi : UITextField = {
-        let txt = OzelTextField(padding : 15)
+        let txt = OzelTextField(padding : 15,yukseklik: 50)
         txt.backgroundColor = .white
         txt.placeholder = "Ad ve Soyad"
         txt.addTarget(self, action: #selector(yakalaTextFieldDeğişim), for: .editingChanged)
         return txt
     }()
     let txtParola : UITextField = {
-        let txt = OzelTextField(padding : 15)
+        let txt = OzelTextField(padding : 15,yukseklik: 50)
         txt.backgroundColor = .white
         txt.placeholder = "Parola"
         txt.isSecureTextEntry = true
@@ -64,6 +64,14 @@ class KayitController: UIViewController {
         btn.addTarget(self, action: #selector(btnKayitOlPressed), for: .touchUpInside)
         return btn
     }()
+    let btnOturumAcGit : UIButton = {
+        let btn = UIButton(type: .system)
+        btn.setTitle("Oturum Aç", for: .normal)
+        btn.setTitleColor(.white, for: .normal)
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .heavy)
+        btn.addTarget(self, action: #selector(btnOturumAcGitPressed), for: .touchUpInside)
+        return btn
+    }()
     //MARK:- Değişkenler
     lazy var kayitStackView = UIStackView(arrangedSubviews: [
         btnFotorafsec,
@@ -82,6 +90,7 @@ class KayitController: UIViewController {
         sv.spacing = 10
         return sv
     }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = true
@@ -138,6 +147,10 @@ class KayitController: UIViewController {
                 self.kayitHud.dismiss()
             }
         }
+    }
+    @objc fileprivate func btnOturumAcGitPressed(){
+        let oturumControoler = OturumController()
+        navigationController?.pushViewController(oturumControoler, animated: true)
     }
     @objc fileprivate func yakalaTextFieldDeğişim(textfield: UITextField){
         //kayitViewModel nesneine değer atıyoruz
@@ -198,6 +211,9 @@ class KayitController: UIViewController {
         kayitStackView.spacing = 10
         _ = kayitStackView.anchor(top: nil, bottom: nil, leading: view.leadingAnchor, traling: view.trailingAnchor,padding: .init(top: 0, left: 45, bottom: 0, right: 45))
         kayitStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        
+        view.addSubview(btnOturumAcGit)
+        _ = btnOturumAcGit.anchor(top: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, leading: view.leadingAnchor, traling: view.trailingAnchor)
     }
     //Ekran döndürmesi her gerçekleştiği sırada  bu meteod çaışıyor
     override func viewWillLayoutSubviews() {

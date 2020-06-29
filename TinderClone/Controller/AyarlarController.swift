@@ -13,6 +13,8 @@ import SDWebImage
 
 class AyarlarController: UITableViewController ,UIImagePickerControllerDelegate,UINavigationControllerDelegate{
     
+    var Delegate : AyarlarControllerDelegate?
+    
     func butonOlustur(selector : Selector) -> UIButton{
         let buton = UIButton(type: .system)
         buton.layer.cornerRadius = 10
@@ -78,17 +80,16 @@ class AyarlarController: UITableViewController ,UIImagePickerControllerDelegate,
     }
     var gecerliKullanici : Kullanici?
     fileprivate func kullaniciBilgileriniGetir(){
-        guard let uid = Auth.auth().currentUser?.uid else{return}
-        Firestore.firestore().collection("Kullanicilar").document(uid).getDocument { (snapshot, error) in
+        
+        Firestore.firestore().gecerliKullaniciyiGetir { (kullanici, error) in
             if let error = error{
-                print(".Kullanici bilgileri Getiriliken hata meydana geldi  hatası \(error.localizedDescription)")
+                print("KullaniciBilgileriniAyarlarken Hata meydana geldi \(error.localizedDescription)")
+                return
             }
-            guard let bilgiler = snapshot?.data() else {return}
-            self.gecerliKullanici = Kullanici(bilgiler: bilgiler)
+            self.gecerliKullanici = kullanici
             self.profilGoruntuleriniYukle()
             self.tableView.reloadData()
         }
-        
     }
     fileprivate func profilGoruntuleriniYukle(){
         if let goruntuURL = gecerliKullanici?.goruntuURL1,let url = URL(string: goruntuURL) {
@@ -270,12 +271,15 @@ class AyarlarController: UITableViewController ,UIImagePickerControllerDelegate,
             }
             hud.dismiss()
             print("...Kullanıcı verileri kaydedildi")
+            self.dismiss(animated: true)
+            self.Delegate?.ayarlarKaydedildi()
         }
     }
     
     @objc fileprivate func btnCikisPressed(){
         print(".Oturum kapatılacak")
-        
+        try?  Auth.auth().signOut()
+        dismiss(animated: true)
     }
     @objc fileprivate func btnIptalPressed(){
         dismiss(animated: true, completion: nil)
@@ -291,4 +295,7 @@ class LabelBaslık : UILabel{
         super.drawText(in: rect.insetBy(dx: 15, dy: 0))
     }
     
+}
+protocol AyarlarControllerDelegate {
+    func ayarlarKaydedildi()
 }

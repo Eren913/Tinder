@@ -27,12 +27,36 @@ class AnaController: UIViewController {
         topStackView.btnAyarlar.addTarget(self, action: #selector(btnAyarlarPressed), for: .touchUpInside)
         AltButonlarStackView.btnYenile.addTarget(self, action: #selector(btnYenilePressed), for: .touchUpInside)
         layoutDuzuenle()
-        kullaniciProfilleriAyarlaFirestore()
-        kulanniciVerileriGetirFS()
+        //kullaniciProfilleriAyarlaFirestore()
+        //kulanniciVerileriGetirFS()
         
-       denemeLogin()
+        // denemeLogin()
+        gecerlikullaniciyiGetir()
         
-        
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if Auth.auth().currentUser == nil{
+            let oturumControler = OturumController()
+            oturumControler.delegate = self
+            let nav = UINavigationController(rootViewController: oturumControler)
+            nav.modalPresentationStyle = .fullScreen
+            present(nav, animated: true, completion: nil)
+        }
+    }
+    fileprivate var gecerliKullanici : Kullanici?
+    fileprivate func gecerlikullaniciyiGetir(){
+        profilDizini.subviews.forEach { (view) in
+            view.removeFromSuperview()
+        }
+        Firestore.firestore().gecerliKullaniciyiGetir { (kullanici, error) in
+            if let error = error{
+                print("...kullanici bilgileri getirilirken hata oluştu\(error.localizedDescription)")
+                return
+            }
+            self.gecerliKullanici = kullanici
+            self.kulanniciVerileriGetirFS()
+        }
     }
     fileprivate func denemeLogin(){
         Auth.auth().signIn(withEmail: "q@q.com", password: "123456", completion: nil)
@@ -44,20 +68,24 @@ class AnaController: UIViewController {
     @objc func btnAyarlarPressed(){
         
         let ayarlarController = AyarlarController()
+        ayarlarController.Delegate = self
         let navController = UINavigationController.init(rootViewController: ayarlarController)
+        navController.modalPresentationStyle = .fullScreen
         present(navController, animated: true, completion: nil)
     }
     var sonGetirilenKullanici : Kullanici?
     
     fileprivate func kulanniciVerileriGetirFS(){
+        
+        guard let arananMinYas = gecerliKullanici?.ArananMinYas , let arananMaxYas = gecerliKullanici?.ArananMaxYas else {return}
+        
         let hud = JGProgressHUD(style: .dark)
         hud.textLabel.text = "Profiller Getiriliyor"
         hud.show(in: view)
         
         let sorgu = Firestore.firestore().collection("Kullanicilar")
-            .order(by: "KullaniciID")
-            .start(after: [sonGetirilenKullanici?.kullaniciID ?? ""])
-            .limit(to: 2)
+            .whereField("Yasi", isGreaterThan: arananMinYas)
+            .whereField("Yasi", isLessThanOrEqualTo: arananMaxYas)
         sorgu.getDocuments { (snapshot, error) in
             hud.dismiss()
             if let hata = error{
@@ -68,9 +96,9 @@ class AnaController: UIViewController {
                     let kullaniciVeri = dSnapshot.data()
                     //Çektiğimiz verileri Kullanıcı initi içerisindeki verilere atıyoruz
                     let kulanici = Kullanici(bilgiler: kullaniciVeri)
-                    self.kullanicilarProfilViewModel.append(kulanici.kullaniciProfilViewModelOlustur())
-                    self.sonGetirilenKullanici = kulanici
-                    self.kullanicidanProfilOlustur(kullanici: kulanici)
+                    if kulanici.kullaniciID != self.gecerliKullanici?.kullaniciID{
+                        self.kullanicidanProfilOlustur(kullanici: kulanici)
+                    }
                 })
                 //Çektiğimiz verileri func sayesinde yanstıyoruyz
             }
@@ -78,6 +106,7 @@ class AnaController: UIViewController {
     }
     fileprivate func kullanicidanProfilOlustur(kullanici: Kullanici){
         let pView = ProfilView(frame: .zero)
+        pView.delegate = self
         pView.kullaniciViewModel = kullanici.kullaniciProfilViewModelOlustur()
         profilDizini.addSubview(pView)
         pView.doldurSuperView()
@@ -106,5 +135,25 @@ class AnaController: UIViewController {
             
         }
     }
+}
+extension AnaController : AyarlarControllerDelegate{
+    func ayarlarKaydedildi() {
+        print("Ayarlar kaydedildi haberim var")
+        gecerlikullaniciyiGetir()
+    }
+}
+extension AnaController : OturumControllerDelegate{
+    func OturumAcmaBitis() {
+        gecerlikullaniciyiGetir()
+    }
+}
+extension AnaController : ProfilViewDelegate{
+    func detayliBilgiPressed() {
+        let kullaniciDetaylari = KullaniciDetaylariController()
+        kullaniciDetaylari.modalPresentationStyle = .fullScreen
+        present(kullaniciDetaylari, animated: true, completion: nil)
+    }
+    
+    
 }
 

@@ -10,6 +10,10 @@
 		2241243024A5760400EDFC63 /* Kullanıcı.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2241242F24A5760400EDFC63 /* Kullanıcı.swift */; };
 		2241243424A62AA600EDFC63 /* KullanıcıProfilViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2241243324A62AA600EDFC63 /* KullanıcıProfilViewModel.swift */; };
 		2241243824A62FA300EDFC63 /* Reklam.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2241243724A62FA300EDFC63 /* Reklam.swift */; };
+		225A9FF124AA1E940039D79A /* Uzantı+FireSore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225A9FF024AA1E940039D79A /* Uzantı+FireSore.swift */; };
+		225A9FF424AA3A100039D79A /* OturumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225A9FF324AA3A100039D79A /* OturumViewModel.swift */; };
+		225A9FF624AA3C430039D79A /* OturumController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225A9FF524AA3C430039D79A /* OturumController.swift */; };
+		225A9FF924AA4F940039D79A /* KullaniciDetaylariController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225A9FF824AA4F940039D79A /* KullaniciDetaylariController.swift */; };
 		227B923C24A5524F00E6F279 /* AnaGorunumAltStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227B923B24A5524F00E6F279 /* AnaGorunumAltStackView.swift */; };
 		227B923E24A55C6D00E6F279 /* AnaGorunumUstStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227B923D24A55C6D00E6F279 /* AnaGorunumUstStackView.swift */; };
 		227B924024A5619D00E6F279 /* ProfilView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227B923F24A5619D00E6F279 /* ProfilView.swift */; };
@@ -35,6 +39,10 @@
 		2241242F24A5760400EDFC63 /* Kullanıcı.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Kullanıcı.swift"; sourceTree = "<group>"; };
 		2241243324A62AA600EDFC63 /* KullanıcıProfilViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KullanıcıProfilViewModel.swift"; sourceTree = "<group>"; };
 		2241243724A62FA300EDFC63 /* Reklam.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reklam.swift; sourceTree = "<group>"; };
+		225A9FF024AA1E940039D79A /* Uzantı+FireSore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Uzantı+FireSore.swift"; sourceTree = "<group>"; };
+		225A9FF324AA3A100039D79A /* OturumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OturumViewModel.swift; sourceTree = "<group>"; };
+		225A9FF524AA3C430039D79A /* OturumController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OturumController.swift; sourceTree = "<group>"; };
+		225A9FF824AA4F940039D79A /* KullaniciDetaylariController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KullaniciDetaylariController.swift; sourceTree = "<group>"; };
 		227B923B24A5524F00E6F279 /* AnaGorunumAltStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnaGorunumAltStackView.swift; sourceTree = "<group>"; };
 		227B923D24A55C6D00E6F279 /* AnaGorunumUstStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnaGorunumUstStackView.swift; sourceTree = "<group>"; };
 		227B923F24A5619D00E6F279 /* ProfilView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilView.swift; sourceTree = "<group>"; };
@@ -84,6 +92,8 @@
 		2241243124A62A8900EDFC63 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				225A9FF724AA4F6B0039D79A /* Kullanici Detayları */,
+				225A9FF224AA39FF0039D79A /* Oturum */,
 				22AFAC70249FD819004C898B /* AnaController.swift */,
 				229DAF9124A66E8B00ACC489 /* KayitController.swift */,
 				229DAF9924A6ADF900ACC489 /* Bindable.swift */,
@@ -118,6 +128,23 @@
 				22AFAC77249FD821004C898B /* LaunchScreen.storyboard */,
 			);
 			path = "StoryBoards+Assets";
+			sourceTree = "<group>";
+		};
+		225A9FF224AA39FF0039D79A /* Oturum */ = {
+			isa = PBXGroup;
+			children = (
+				225A9FF324AA3A100039D79A /* OturumViewModel.swift */,
+				225A9FF524AA3C430039D79A /* OturumController.swift */,
+			);
+			path = Oturum;
+			sourceTree = "<group>";
+		};
+		225A9FF724AA4F6B0039D79A /* Kullanici Detayları */ = {
+			isa = PBXGroup;
+			children = (
+				225A9FF824AA4F940039D79A /* KullaniciDetaylariController.swift */,
+			);
+			path = "Kullanici Detayları";
 			sourceTree = "<group>";
 		};
 		227B923A24A5522500E6F279 /* Views */ = {
@@ -171,6 +198,7 @@
 			isa = PBXGroup;
 			children = (
 				22AFAC81249FD949004C898B /* Extensions+UIView.swift */,
+				225A9FF024AA1E940039D79A /* Uzantı+FireSore.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -309,6 +337,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				22CB7D5924A7C2DF00150310 /* AyarlarController.swift in Sources */,
+				225A9FF124AA1E940039D79A /* Uzantı+FireSore.swift in Sources */,
 				229DAF9624A68D4800ACC489 /* KayitViewModel.swift in Sources */,
 				229DAF9224A66E8B00ACC489 /* KayitController.swift in Sources */,
 				22AFAC71249FD819004C898B /* AnaController.swift in Sources */,
@@ -318,11 +347,14 @@
 				22AFAC6D249FD819004C898B /* AppDelegate.swift in Sources */,
 				229DAF9424A675C800ACC489 /* OzelTextField.swift in Sources */,
 				22CB7D5B24A7CFC300150310 /* AyarlarCell.swift in Sources */,
+				225A9FF424AA3A100039D79A /* OturumViewModel.swift in Sources */,
 				22AFAC82249FD949004C898B /* Extensions+UIView.swift in Sources */,
 				229DAF9A24A6ADF900ACC489 /* Bindable.swift in Sources */,
 				22AFAC6F249FD819004C898B /* SceneDelegate.swift in Sources */,
 				227B923C24A5524F00E6F279 /* AnaGorunumAltStackView.swift in Sources */,
+				225A9FF924AA4F940039D79A /* KullaniciDetaylariController.swift in Sources */,
 				2241243024A5760400EDFC63 /* Kullanıcı.swift in Sources */,
+				225A9FF624AA3C430039D79A /* OturumController.swift in Sources */,
 				227B923E24A55C6D00E6F279 /* AnaGorunumUstStackView.swift in Sources */,
 				2241243824A62FA300EDFC63 /* Reklam.swift in Sources */,
 			);
