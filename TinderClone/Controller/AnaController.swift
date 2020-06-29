@@ -148,12 +148,11 @@ extension AnaController : OturumControllerDelegate{
     }
 }
 extension AnaController : ProfilViewDelegate{
-    func detayliBilgiPressed() {
+    func detayliBilgiPressed(kullaniciVM: KullaniciProfilViewModel) {
         let kullaniciDetaylari = KullaniciDetaylariController()
         kullaniciDetaylari.modalPresentationStyle = .fullScreen
+        kullaniciDetaylari.kullaniciViewModel = kullaniciVM
         present(kullaniciDetaylari, animated: true, completion: nil)
     }
-    
-    
 }
 

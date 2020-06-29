@@ -14,6 +14,7 @@
 		225A9FF424AA3A100039D79A /* OturumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225A9FF324AA3A100039D79A /* OturumViewModel.swift */; };
 		225A9FF624AA3C430039D79A /* OturumController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225A9FF524AA3C430039D79A /* OturumController.swift */; };
 		225A9FF924AA4F940039D79A /* KullaniciDetaylariController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225A9FF824AA4F940039D79A /* KullaniciDetaylariController.swift */; };
+		225A9FFB24AA7D400039D79A /* FotoGecisController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225A9FFA24AA7D400039D79A /* FotoGecisController.swift */; };
 		227B923C24A5524F00E6F279 /* AnaGorunumAltStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227B923B24A5524F00E6F279 /* AnaGorunumAltStackView.swift */; };
 		227B923E24A55C6D00E6F279 /* AnaGorunumUstStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227B923D24A55C6D00E6F279 /* AnaGorunumUstStackView.swift */; };
 		227B924024A5619D00E6F279 /* ProfilView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227B923F24A5619D00E6F279 /* ProfilView.swift */; };
@@ -43,6 +44,7 @@
 		225A9FF324AA3A100039D79A /* OturumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OturumViewModel.swift; sourceTree = "<group>"; };
 		225A9FF524AA3C430039D79A /* OturumController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OturumController.swift; sourceTree = "<group>"; };
 		225A9FF824AA4F940039D79A /* KullaniciDetaylariController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KullaniciDetaylariController.swift; sourceTree = "<group>"; };
+		225A9FFA24AA7D400039D79A /* FotoGecisController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FotoGecisController.swift; sourceTree = "<group>"; };
 		227B923B24A5524F00E6F279 /* AnaGorunumAltStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnaGorunumAltStackView.swift; sourceTree = "<group>"; };
 		227B923D24A55C6D00E6F279 /* AnaGorunumUstStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnaGorunumUstStackView.swift; sourceTree = "<group>"; };
 		227B923F24A5619D00E6F279 /* ProfilView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilView.swift; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				225A9FF824AA4F940039D79A /* KullaniciDetaylariController.swift */,
+				225A9FFA24AA7D400039D79A /* FotoGecisController.swift */,
 			);
 			path = "Kullanici Detayları";
 			sourceTree = "<group>";
@@ -351,6 +354,7 @@
 				22AFAC82249FD949004C898B /* Extensions+UIView.swift in Sources */,
 				229DAF9A24A6ADF900ACC489 /* Bindable.swift in Sources */,
 				22AFAC6F249FD819004C898B /* SceneDelegate.swift in Sources */,
+				225A9FFB24AA7D400039D79A /* FotoGecisController.swift in Sources */,
 				227B923C24A5524F00E6F279 /* AnaGorunumAltStackView.swift in Sources */,
 				225A9FF924AA4F940039D79A /* KullaniciDetaylariController.swift in Sources */,
 				2241243024A5760400EDFC63 /* Kullanıcı.swift in Sources */,

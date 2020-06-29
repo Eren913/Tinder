@@ -75,7 +75,7 @@ class ProfilView: UIView {
     }()
     @objc fileprivate func btnDetayliBilgiPressed(){
         
-        delegate?.detayliBilgiPressed()
+        delegate?.detayliBilgiPressed(kullaniciVM: kullaniciViewModel)
     }
     fileprivate func duzenleLayout(){
         layer.cornerRadius = 15
@@ -158,7 +158,7 @@ class ProfilView: UIView {
         let translationYonu : CGFloat = panGesture.translation(in: nil).x > 0 ? 1 : -1
         //Burda eğer kullanıcıın hareket değeri.x sınır değerin üstünde olursa true oluyor  ve mutlak değere çeviriyoruz abs ile
         let profilKaybet : Bool = abs(panGesture.translation(in: nil).x) > sinirDegeri
-        UIView.animate(withDuration: 0.8, delay: 0, /* Resmin Yaylanma çzelliğini ifade ediyor*/ usingSpringWithDamping: 0.5, /*Animasyonun hızı */initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.8, delay: 0, /* Resmin Yaylanma çzelliğini ifade ediyor*/ usingSpringWithDamping: 0.7, /*Animasyonun hızı */initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             //animasyonun amacını yazıyoruz
             if profilKaybet {
                 //burda ise profil remisini x düzlemind e900 birim fırlatıyoruz değer true ise
@@ -196,5 +196,5 @@ class ProfilView: UIView {
     }
 }
 protocol ProfilViewDelegate {
-    func detayliBilgiPressed()
+    func detayliBilgiPressed(kullaniciVM: KullaniciProfilViewModel)
 }
