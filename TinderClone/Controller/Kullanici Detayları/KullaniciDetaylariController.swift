@@ -28,7 +28,7 @@ class KullaniciDetaylariController: UIViewController {
         return sv
     }()
 
-    let fotoGecisController = FotoGecisController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+    let fotoGecisController = FotoGecisController()
     let lblbilgi : UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0

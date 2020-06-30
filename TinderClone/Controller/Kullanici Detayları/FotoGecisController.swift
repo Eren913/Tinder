@@ -46,7 +46,52 @@ class FotoGecisController: UIPageViewController {
         dataSource = self
         delegate = self
         
+        if kullaniciViewModelMi{
+            fotoGecisIptal()
+        }
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapGestureFoto)))
     }
+    @objc fileprivate func tapGestureFoto(gesture : UITapGestureRecognizer){
+        let gorunencontroller = viewControllers!.first!
+        
+        if let index = controllers.firstIndex(of: gorunencontroller){
+            
+            barStackView.arrangedSubviews.forEach({$0.backgroundColor = seciliolamyanRenk})
+            
+            if gesture.location(in: self.view).x > view.frame.width / 2{
+                let sonrakiIndex = min(controllers.count - 1,index + 1)
+                let sonrakiController = controllers[sonrakiIndex]
+                setViewControllers([sonrakiController], direction: .forward, animated: true)
+                barStackView.arrangedSubviews[sonrakiIndex].backgroundColor = .white
+                
+            }else{
+                let oncekiIndex = max(0, index - 1)
+                let oncekiController = controllers[oncekiIndex]
+                barStackView.arrangedSubviews[oncekiIndex].backgroundColor = .white
+                setViewControllers([oncekiController], direction: .reverse, animated: true)
+            }
+        }
+    }
+    fileprivate func fotoGecisIptal(){
+        view.subviews.forEach { (v) in
+            if let v = v as? UIScrollView{
+                v.isScrollEnabled = false
+            }
+        }
+    }
+    
+    
+    fileprivate let kullaniciViewModelMi : Bool
+    
+    init(kullaniciViewModelmi : Bool = false){
+        self.kullaniciViewModelMi = kullaniciViewModelmi
+        super.init(transitionStyle: .scroll, navigationOrientation: .horizontal)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 }
 extension FotoGecisController : UIPageViewControllerDataSource{
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {

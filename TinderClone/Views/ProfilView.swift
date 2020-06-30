@@ -16,12 +16,8 @@ class ProfilView: UIView {
     //Kullanıcı view modeldaki verileri tek bir veriye eşitliyoruz
     var kullaniciViewModel : KullaniciProfilViewModel! {
         didSet{
-            let goruntuAdi = kullaniciViewModel.goruntuAdlari.first ?? ""
-            if let url = URL(string: goruntuAdi){
-                imgProfil.sd_setImage(with: url, placeholderImage: UIImage(named: "orginal"), options: .continueInBackground)
-            }else{
-                imgProfil.image = UIImage(named: "orginal")
-            }
+            //let goruntuAdi = kullaniciViewModel.goruntuAdlari.first ?? ""
+            fotoGecisController.kullaniciViewModel = kullaniciViewModel
             lblKullanicibilgileri.attributedText = kullaniciViewModel.attrString
             lblKullanicibilgileri.textAlignment = kullaniciViewModel.bilgiKonumu
             
@@ -41,11 +37,7 @@ class ProfilView: UIView {
     fileprivate func ayarlaGoruntundexGozlemci(){
         
         kullaniciViewModel.goruntuIndexGozlemci = { (index,goruntuURL) in
-            if let url = URL(string: goruntuURL ?? ""){
-                self.imgProfil.sd_setImage(with: url, placeholderImage: UIImage(named: "orginal"), options: .continueInBackground)
-            }else{
-                self.imgProfil.image = UIImage(named: "orginal")
-            }
+           
             self.goruntuBarStackView.arrangedSubviews.forEach { (sView) in
                 sView.backgroundColor = self.secilOlmayanRenk
             }
@@ -56,7 +48,8 @@ class ProfilView: UIView {
     }
     
     
-    fileprivate let imgProfil = UIImageView()
+    //fileprivate let imgProfil = UIImageView()
+    fileprivate let fotoGecisController = FotoGecisController(kullaniciViewModelmi: true)
     fileprivate let gradientLayer = CAGradientLayer()
     fileprivate let lblKullanicibilgileri = UILabel()
     fileprivate let sinirDegeri : CGFloat = 120
@@ -85,10 +78,9 @@ class ProfilView: UIView {
     fileprivate func duzenleLayout(){
         layer.cornerRadius = 15
         clipsToBounds = true
-        imgProfil.contentMode = .scaleAspectFill
-        addSubview(imgProfil)
-        imgProfil.doldurSuperView()
-        olsusturBarstackView()
+        let fotogecisView = fotoGecisController.view!
+        addSubview(fotogecisView)
+        fotogecisView.doldurSuperView()
         olusturGradientLayer()
         addSubview(lblKullanicibilgileri)
         _ = lblKullanicibilgileri.anchor(top: nil, bottom: bottomAnchor, leading: leadingAnchor, traling: trailingAnchor, padding: .init(top: 0, left: 15, bottom: 15, right: 15))
