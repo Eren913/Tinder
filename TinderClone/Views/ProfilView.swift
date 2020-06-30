@@ -10,6 +10,7 @@ import UIKit
 import SDWebImage
 class ProfilView: UIView {
     
+    var sonrakiProfilView: ProfilView?
     
     var delegate : ProfilViewDelegate?
     
@@ -154,10 +155,12 @@ class ProfilView: UIView {
         //eğer x değeri pozitif ise(?) negatif ise(:) -1
         let translationYonu : CGFloat = panGesture.translation(in: nil).x > 0 ? 1 : -1
         //Burda eğer kullanıcıın hareket değeri.x sınır değerin üstünde olursa true oluyor  ve mutlak değere çeviriyoruz abs ile
+        
         let profilKaybet : Bool = abs(panGesture.translation(in: nil).x) > sinirDegeri
         UIView.animate(withDuration: 0.8, delay: 0, /* Resmin Yaylanma çzelliğini ifade ediyor*/ usingSpringWithDamping: 0.7, /*Animasyonun hızı */initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             //animasyonun amacını yazıyoruz
             if profilKaybet {
+                
                 //burda ise profil remisini x düzlemind e900 birim fırlatıyoruz değer true ise
                 let ekranDisi = self.transform.translatedBy(x: 900*translationYonu, y: 0)
                 self.transform = ekranDisi
@@ -173,6 +176,7 @@ class ProfilView: UIView {
             if profilKaybet{
                 //Giden resmi kaybediyor ortadan
                 self.removeFromSuperview()
+                self.delegate?.ProfiliSıradanÇıkar(profil: self)
             }
         }
     }
@@ -193,5 +197,6 @@ class ProfilView: UIView {
     }
 }
 protocol ProfilViewDelegate {
+    func ProfiliSıradanÇıkar(profil : ProfilView)
     func detayliBilgiPressed(kullaniciVM: KullaniciProfilViewModel)
 }

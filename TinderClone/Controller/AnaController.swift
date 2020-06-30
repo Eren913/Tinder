@@ -26,6 +26,8 @@ class AnaController: UIViewController {
         self.navigationController?.navigationBar.isHidden = true
         topStackView.btnAyarlar.addTarget(self, action: #selector(btnAyarlarPressed), for: .touchUpInside)
         AltButonlarStackView.btnYenile.addTarget(self, action: #selector(btnYenilePressed), for: .touchUpInside)
+        AltButonlarStackView.btnBegen.addTarget(self, action: #selector(btnBegenPressed), for: .touchUpInside)
+        AltButonlarStackView.btnKapat.addTarget(self, action: #selector(btnKapatPressed), for: .touchUpInside)
         layoutDuzuenle()
         //kullaniciProfilleriAyarlaFirestore()
         //kulanniciVerileriGetirFS()
@@ -33,6 +35,38 @@ class AnaController: UIViewController {
         // denemeLogin()
         gecerlikullaniciyiGetir()
         
+    }
+    @objc fileprivate func btnKapatPressed(){
+        profilGecisAnimasyon(translation: -800, angle: -18)
+    }
+    var gorunenEnUstProfilView : ProfilView?
+    @objc fileprivate func btnBegenPressed(){
+        profilGecisAnimasyon(translation: 800, angle: 18)
+        
+    }
+    fileprivate func profilGecisAnimasyon(translation : CGFloat,angle : CGFloat){
+        
+        let basicAnimation = CABasicAnimation(keyPath: "position.x")
+        basicAnimation.toValue = translation
+        basicAnimation.duration = 1
+        basicAnimation.fillMode = .forwards
+        basicAnimation.timingFunction = CAMediaTimingFunction(name: .easeOut)
+        //Animasyon sonucunu ekran dışında saklayıp geri gelmemesni sağlıyoruz
+        basicAnimation.isRemovedOnCompletion = false
+        
+        
+        let dondurmeAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
+        dondurmeAnimation.toValue = CGFloat.pi * angle / 180
+        dondurmeAnimation.duration = 1
+        let ustpView = gorunenEnUstProfilView
+        gorunenEnUstProfilView = ustpView?.sonrakiProfilView
+        
+        CATransaction.setCompletionBlock {
+            ustpView?.removeFromSuperview()
+        }
+        ustpView?.layer.add(basicAnimation, forKey: "anime")
+        ustpView?.layer.add(dondurmeAnimation, forKey: "dondurme")
+        CATransaction.commit()
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -65,8 +99,9 @@ class AnaController: UIViewController {
         print("Oturum açıldı")
     }
     @objc func btnYenilePressed(){
-        profilDizini.subviews.forEach({$0.removeFromSuperview()})
-        kulanniciVerileriGetirFS()
+        if gorunenEnUstProfilView == nil {
+            kulanniciVerileriGetirFS()
+        }
     }
     @objc func btnAyarlarPressed(){
         
@@ -80,7 +115,7 @@ class AnaController: UIViewController {
     
     fileprivate func kulanniciVerileriGetirFS(){
         
-      //  guard let arananMinYas = gecerliKullanici?.ArananMinYas , let arananMaxYas = gecerliKullanici?.ArananMaxYas else {return}
+        //  guard let arananMinYas = gecerliKullanici?.ArananMinYas , let arananMaxYas = gecerliKullanici?.ArananMaxYas else {return}
         
         let hud = JGProgressHUD(style: .dark)
         hud.textLabel.text = "Profiller Getiriliyor"
@@ -92,30 +127,40 @@ class AnaController: UIViewController {
         let sorgu = Firestore.firestore().collection("Kullanicilar")
             .whereField("Yasi", isGreaterThan: arananMinYas)
             .whereField("Yasi", isLessThanOrEqualTo: arananMaxYas)
+        gorunenEnUstProfilView = nil
         sorgu.getDocuments { (snapshot, error) in
             hud.dismiss()
             if let hata = error{
                 print("Kullanıcılar getirilirken hata oluştu \(hata.localizedDescription)")
                 return
             }else{
+                var oncekiProfilView : ProfilView?
                 snapshot?.documents.forEach({ (dSnapshot) in
                     let kullaniciVeri = dSnapshot.data()
                     //Çektiğimiz verileri Kullanıcı initi içerisindeki verilere atıyoruz
                     let kulanici = Kullanici(bilgiler: kullaniciVeri)
                     if kulanici.kullaniciID != self.gecerliKullanici?.kullaniciID{
-                        self.kullanicidanProfilOlustur(kullanici: kulanici)
+                        let pView = self.kullanicidanProfilOlustur(kullanici: kulanici)
+                        
+                        if self.gorunenEnUstProfilView == nil{
+                            self.gorunenEnUstProfilView = pView
+                        }
+                        oncekiProfilView?.sonrakiProfilView = pView
+                        oncekiProfilView = pView
                     }
                 })
                 //Çektiğimiz verileri func sayesinde yanstıyoruyz
             }
         }
     }
-    fileprivate func kullanicidanProfilOlustur(kullanici: Kullanici){
+    fileprivate func kullanicidanProfilOlustur(kullanici: Kullanici) -> ProfilView{
         let pView = ProfilView(frame: .zero)
         pView.delegate = self
         pView.kullaniciViewModel = kullanici.kullaniciProfilViewModelOlustur()
         profilDizini.addSubview(pView)
+        profilDizini.sendSubviewToBack(pView)
         pView.doldurSuperView()
+        return pView
     }
     //MARK: Layout düzenyeen fonksiyon
     func layoutDuzuenle(){
@@ -154,6 +199,12 @@ extension AnaController : OturumControllerDelegate{
     }
 }
 extension AnaController : ProfilViewDelegate{
+    
+    func ProfiliSıradanÇıkar(profil: ProfilView) {
+        self.gorunenEnUstProfilView?.removeFromSuperview()
+        self.gorunenEnUstProfilView = self.gorunenEnUstProfilView?.sonrakiProfilView
+    }
+    
     func detayliBilgiPressed(kullaniciVM: KullaniciProfilViewModel) {
         let kullaniciDetaylari = KullaniciDetaylariController()
         kullaniciDetaylari.modalPresentationStyle = .fullScreen
