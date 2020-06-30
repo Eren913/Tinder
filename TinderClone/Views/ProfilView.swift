@@ -168,32 +168,6 @@ class ProfilView: UIView {
                 self.transform = .identity
             })
         }
-        
-       
-        /*
-         UIView.animate(withDuration: 0.8, delay: 0, /* Resmin Yaylanma çzelliğini ifade ediyor*/ usingSpringWithDamping: 0.7, /*Animasyonun hızı */initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-         //animasyonun amacını yazıyoruz
-         if profilKaybet {
-         
-         //burda ise profil remisini x düzlemind e900 birim fırlatıyoruz değer true ise
-         let ekranDisi = self.transform.translatedBy(x: 900*translationYonu, y: 0)
-         self.transform = ekranDisi
-         }else{
-         //false dönünce değer eski yerine dönmesini sağlıutz
-         self.transform = .identity
-         }
-         }) { (_) in
-         //Kart Geri gelince yazılan yazı ve geri gelince frame de durcak yerini belirliyoruz
-         print("Animasyon Bitti Kart Geliyor")
-         self.transform = .identity
-         if profilKaybet{
-         //Giden resmi kaybediyor ortadan
-         self.removeFromSuperview()
-         self.delegate?.ProfiliSıradanÇıkar(profil: self)
-         }
-         
-         }
-         */
     }
     
     fileprivate func degisiklikPanyakala(_ panGesture: UIPanGestureRecognizer) {
