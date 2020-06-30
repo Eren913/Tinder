@@ -36,11 +36,43 @@ class AnaController: UIViewController {
         gecerlikullaniciyiGetir()
         
     }
-    @objc fileprivate func btnKapatPressed(){
+    @objc  func btnKapatPressed(){
+        gecisleriKaydetFS(begeniDurumu: -1)
         profilGecisAnimasyon(translation: -800, angle: -18)
+        
+    }
+    fileprivate func gecisleriKaydetFS(begeniDurumu: Int){
+        
+        guard let kullaniciID = Auth.auth().currentUser?.uid else {return}
+        guard let profilID = gorunenEnUstProfilView?.kullaniciViewModel.kullaniciID else {return}
+        
+        let eklenecekVeri = [profilID : begeniDurumu]
+        
+        Firestore.firestore().collection("Gecisler").document(kullaniciID).getDocument { (snapshot, error) in
+            if let error = error{
+                print("Geçiş Verisi Alınamadı \(error.localizedDescription)")
+                return
+            }
+            if snapshot?.exists == true{
+                //veri zaten vardır Güncekkenebilir
+                Firestore.firestore().collection("Gecisler").document(kullaniciID).updateData(eklenecekVeri){ (error) in
+                    if let error = error{
+                        print("Geçiş Verisi Kaydı Hatalı \(error.localizedDescription)")
+                    }
+                }
+            }else{
+                //Veri yok Veri eklenebilir
+                Firestore.firestore().collection("Gecisler").document(kullaniciID).setData(eklenecekVeri) { (error) in
+                    if let error = error{
+                        print("Geçiş Verisi Kaydı Hatalı \(error.localizedDescription)")
+                    }
+                }
+            }
+        }
     }
     var gorunenEnUstProfilView : ProfilView?
-    @objc fileprivate func btnBegenPressed(){
+    @objc  func btnBegenPressed(){
+        gecisleriKaydetFS(begeniDurumu: 1)
         profilGecisAnimasyon(translation: 800, angle: 18)
         
     }

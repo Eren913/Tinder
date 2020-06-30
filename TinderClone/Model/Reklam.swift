@@ -18,7 +18,7 @@ struct Reklam : ProfilViewModelOlustur{
      func kullaniciProfilViewModelOlustur() -> KullaniciProfilViewModel {
         let attrText = NSMutableAttributedString(string: baslik, attributes: [.font : UIFont.systemFont(ofSize: 35, weight: .heavy)])
         attrText.append(NSAttributedString(string: "\n\(markaAdi)", attributes: [.font : UIFont.systemFont(ofSize: 25, weight: .bold)]))
-        return KullaniciProfilViewModel(attrString: attrText, goruntuAdlari: [afisGoruntuAdi], bilgiKonumu: .center)
+        return KullaniciProfilViewModel(attrString: attrText, goruntuAdlari: [afisGoruntuAdi], bilgiKonumu: .center, kullaniciID: "")
     }
     
     

@@ -38,7 +38,7 @@ class ProfilView: UIView {
     fileprivate func ayarlaGoruntundexGozlemci(){
         
         kullaniciViewModel.goruntuIndexGozlemci = { (index,goruntuURL) in
-           
+            
             self.goruntuBarStackView.arrangedSubviews.forEach { (sView) in
                 sView.backgroundColor = self.secilOlmayanRenk
             }
@@ -152,33 +152,48 @@ class ProfilView: UIView {
     fileprivate func bitisPanAnimasyon( _ panGesture : UIPanGestureRecognizer) {
         //Kullanıcının hareket ettirebilceği bir sınır değeri giriyoruz
         //sinirdegeri
-        //eğer x değeri pozitif ise(?) negatif ise(:) -1
+        //eğer x değeri pozitif ise(?) negatif ise(:) -1 //1 sağa -1 sola
         let translationYonu : CGFloat = panGesture.translation(in: nil).x > 0 ? 1 : -1
         //Burda eğer kullanıcıın hareket değeri.x sınır değerin üstünde olursa true oluyor  ve mutlak değere çeviriyoruz abs ile
-        
         let profilKaybet : Bool = abs(panGesture.translation(in: nil).x) > sinirDegeri
-        UIView.animate(withDuration: 0.8, delay: 0, /* Resmin Yaylanma çzelliğini ifade ediyor*/ usingSpringWithDamping: 0.7, /*Animasyonun hızı */initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            //animasyonun amacını yazıyoruz
-            if profilKaybet {
-                
-                //burda ise profil remisini x düzlemind e900 birim fırlatıyoruz değer true ise
-                let ekranDisi = self.transform.translatedBy(x: 900*translationYonu, y: 0)
-                self.transform = ekranDisi
-            }else{
-                //false dönünce değer eski yerine dönmesini sağlıutz
+        if profilKaybet{
+            guard let anaController = self.delegate as? AnaController else{return}
+                   if translationYonu == 1{
+                       anaController.btnBegenPressed()
+                   }else{
+                       anaController.btnKapatPressed()
+                   }
+        }else{
+            UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.1, options: .curveEaseOut, animations: {
                 self.transform = .identity
-            }
-            
-        }) { (_) in
-            //Kart Geri gelince yazılan yazı ve geri gelince frame de durcak yerini belirliyoruz
-            print("Animasyon Bitti Kart Geliyor")
-            self.transform = .identity
-            if profilKaybet{
-                //Giden resmi kaybediyor ortadan
-                self.removeFromSuperview()
-                self.delegate?.ProfiliSıradanÇıkar(profil: self)
-            }
+            })
         }
+        
+       
+        /*
+         UIView.animate(withDuration: 0.8, delay: 0, /* Resmin Yaylanma çzelliğini ifade ediyor*/ usingSpringWithDamping: 0.7, /*Animasyonun hızı */initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+         //animasyonun amacını yazıyoruz
+         if profilKaybet {
+         
+         //burda ise profil remisini x düzlemind e900 birim fırlatıyoruz değer true ise
+         let ekranDisi = self.transform.translatedBy(x: 900*translationYonu, y: 0)
+         self.transform = ekranDisi
+         }else{
+         //false dönünce değer eski yerine dönmesini sağlıutz
+         self.transform = .identity
+         }
+         }) { (_) in
+         //Kart Geri gelince yazılan yazı ve geri gelince frame de durcak yerini belirliyoruz
+         print("Animasyon Bitti Kart Geliyor")
+         self.transform = .identity
+         if profilKaybet{
+         //Giden resmi kaybediyor ortadan
+         self.removeFromSuperview()
+         self.delegate?.ProfiliSıradanÇıkar(profil: self)
+         }
+         
+         }
+         */
     }
     
     fileprivate func degisiklikPanyakala(_ panGesture: UIPanGestureRecognizer) {
@@ -200,3 +215,4 @@ protocol ProfilViewDelegate {
     func ProfiliSıradanÇıkar(profil : ProfilView)
     func detayliBilgiPressed(kullaniciVM: KullaniciProfilViewModel)
 }
+

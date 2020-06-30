@@ -48,6 +48,6 @@ struct Kullanici  : ProfilViewModelOlustur {
         if let url = goruntuURL1 , !url.isEmpty{goruntulerUrl.append(url)}
         if let url = goruntuURL2 , !url.isEmpty{goruntulerUrl.append(url)}
         if let url = goruntuURL3 , !url.isEmpty{goruntulerUrl.append(url)}
-        return KullaniciProfilViewModel(attrString: attrText, goruntuAdlari: goruntulerUrl, bilgiKonumu: .left)
+        return KullaniciProfilViewModel(attrString: attrText, goruntuAdlari: goruntulerUrl, bilgiKonumu: .left, kullaniciID: self.kullaniciID)
     }
 }

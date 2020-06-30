@@ -9,15 +9,16 @@
 import Foundation
 import UIKit
 class KullaniciProfilViewModel {
-    
+    let kullaniciID : String
     let attrString : NSAttributedString
     let goruntuAdlari : [String]
     let bilgiKonumu : NSTextAlignment
     
-    init(attrString : NSAttributedString,goruntuAdlari : [String],bilgiKonumu : NSTextAlignment){
+    init(attrString : NSAttributedString,goruntuAdlari : [String],bilgiKonumu : NSTextAlignment,kullaniciID : String){
         self.attrString = attrString
         self.goruntuAdlari = goruntuAdlari
         self.bilgiKonumu = bilgiKonumu
+        self.kullaniciID = kullaniciID
     }
     
     fileprivate var goruntuIndex = 0{
